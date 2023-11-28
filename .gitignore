@@ -1,0 +1,13 @@
+# Compiled
+*.elc
+
+# Packaging
+.cask
+
+# Backup files
+*.txt
+
+elpa/
+etc/
+transient/
+var/
