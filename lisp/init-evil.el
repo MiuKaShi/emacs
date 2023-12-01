@@ -106,9 +106,11 @@ if LOCALLEADER is nil, otherwise \"<localleader>\"."
       ;; Resume
       "'" 'vertico-repeat
 
-      ;; file
+			;; Find-file
+      "." 'find-file
+
+			;; file
       "f"  '(:wk "files")
-      "ff" 'find-file
       "fF" 'find-file-other-window
       "f/" 'find-file-other-window
       "fC" '+copy-current-file
@@ -152,24 +154,32 @@ if LOCALLEADER is nil, otherwise \"<localleader>\"."
       "cx" 'quickrun
 
       ;; window
-      "w" 'evil-window-map
+      "w" '(:wk "Windows")
       "wx" 'kill-buffer-and-window
       "wu" '+transient-tab-bar-history
       "w-" 'split-window-vertically
       "w/" 'split-window-horizontally
+    	"wc" 'evil-window-delete
+    	"wn" 'evil-window-new
+    	"ws" 'evil-window-split
+    	"wv" 'evil-window-vsplit
+    	;; Window motions
+    	"wh" 'evil-window-left
+    	"wj" 'evil-window-down
+    	"wk" 'evil-window-up
+    	"wl" 'evil-window-right
+    	"ww" 'evil-window-next
+    	;; Move Windows
+    	"wH" 'buf-move-left
+    	"wJ" 'buf-move-down
+    	"wK" 'buf-move-up
+    	"wL" 'buf-move-right
 
-      ;; tab
-      "t" '(:wk "tab")
-      "t9" 'tab-bar-switch-to-last-tab
-      "tc" 'tab-bar-close-tab
-      "tC" 'tab-bar-close-group-tabs
-      "tg" 'tab-bar-change-tab-group
-      "ti" 'tab-switcher
-      "tn" 'tab-bar-new-tab
-      "to" 'tab-bar-close-other-tabs
-      "tt" 'tab-bar-switch-to-tab
-      "tp" 'tab-bar-switch-to-recent-tab
-      "tr" 'tab-bar-rename-tab
+
+      ;; Toggle
+      "t" '(:wk "Toggle")
+      "tl" 'display-line-numbers-mode
+      "tt" 'visual-line-mode
 
       ;; search
       "s" '(:wk "search")
@@ -189,6 +199,7 @@ if LOCALLEADER is nil, otherwise \"<localleader>\"."
       "ac" 'calendar
       "ag" 'gnus
       "ai" 'rcirc
+      "at" 'load-theme
 
       ;; open
       "o" '(:wk "open")
@@ -198,6 +209,7 @@ if LOCALLEADER is nil, otherwise \"<localleader>\"."
       "oe" 'eshell
       "os" 'shell)
 
+      ;; org
     (with-eval-after-load 'org
       (define-leader-key 'normal org-mode-map :localleader
         "." 'org-goto
@@ -247,6 +259,7 @@ if LOCALLEADER is nil, otherwise \"<localleader>\"."
         "it" 'org-time-stamp-inactive
         "iT" 'org-time-stamp))
 
+      ;; elisp
     (with-eval-after-load 'elisp-mode
       (dolist (keymap (list emacs-lisp-mode-map lisp-interaction-mode-map))
         (define-leader-key 'normal keymap :localleader

@@ -140,26 +140,5 @@ If popup is focused, kill it."
   (shell-kill-buffer-on-exit t)
   (shell-get-old-input-include-continuation-lines t))
 
-;; For windows, use eshell instead.
-(use-package eshell
-  :ensure nil
-  :when (eq system-type 'windows-nt)
-  :bind ("M-`" . eshell-toggle)
-  :config
-  (defun eshell-toggle ()
-    "Toggle a persistent eshell popup window.
-If popup is visible but unselected, select it.
-If popup is focused, kill it."
-    (interactive)
-    (if-let ((win (get-buffer-window "*eshell-popup*")))
-        (if (eq (selected-window) win)
-            ;; If users attempt to delete the sole ordinary window. silence it.
-            (shell-delete-window)
-          (select-window win))
-      (let ((display-comint-buffer-action '(display-buffer-at-bottom
-                                            (inhibit-same-window . nil)))
-            (eshell-buffer-name "*eshell-popup*"))
-        (with-current-buffer (eshell)
-          (add-hook 'eshell-exit-hook 'shell-delete-window nil t))))))
 
 (provide 'init-shell)

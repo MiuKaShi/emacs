@@ -5,14 +5,21 @@
 (require 'init-macros)
 
 (use-package org
-  :pin melpa
   :ensure nil
-	:mode ("\\.org\\'" . org-mode)
+  :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)
 		 (org-mode . my/org-prettify-symbols))
   :commands (org-find-exact-headline-in-buffer org-set-tags)
   :custom-face
-	;; 设置代码块用上下边线包裹
+  ;; 设置Org mode标题以及每级标题行的大小
+  (org-document-title ((t (:height 2.5 :weight bold))))
+  (org-level-1 ((t (:height 1.6 :weight bold))))
+  (org-level-2 ((t (:height 1.5 :weight bold))))
+  (org-level-3 ((t (:height 1.4 :weight bold))))
+  (org-level-4 ((t (:height 1.3 :weight bold))))
+  (org-level-5 ((t (:height 1.2 :weight bold))))
+  (org-level-6 ((t (:height 1.1 :weight bold))))
+  ;; 设置代码块用上下边线包裹
   (org-block-begin-line ((t (:underline t :background unspecified))))
   (org-block-end-line ((t (:overline t :underline nil :background unspecified))))
   :config
@@ -68,7 +75,7 @@
   (defun my-func/open-and-play-gif-image (file &optional link)
 	"Open and play GIF image `FILE' in Emacs buffer.
 
-	Optional for Org-mode file: `LINK'."
+Optional for Org-mode file: `LINK'."
 	(let ((gif-image (create-image file))
 		  (tmp-buf (get-buffer-create "*Org-mode GIF image animation*")))
 	  (switch-to-buffer tmp-buf)
@@ -89,14 +96,18 @@
                         ("\\.svg\\'"     . default)
                         ("\\.pptx\\'"    . default)
                         ("\\.docx\\'"    . default)))
+
   :custom
   ;; 设置Org mode的目录
-  (org-directory "~/.org/")
+  (org-directory "~/org")
   ;; 设置笔记的默认存储位置
-  (org-default-notes-file (expand-file-name "notes.org" org-directory))
+  (org-default-notes-file (expand-file-name "capture.org" org-directory))
   ;; 启用一些子模块
   (org-modules '(ol-bibtex ol-gnus ol-info ol-eww org-habit org-protocol))
-	;; 标题行美化
+  ;; 在按M-RET时，是否根据光标所在的位置分行，这里设置为是
+  ;; (org-M-RET-may-split-line '((default . nil)))
+  ;; 一些Org mode自带的美化设置
+  ;; 标题行美化
   (org-fontify-whole-heading-line t)
   ;; 设置标题行折叠符号
   (org-ellipsis " ▾")
@@ -136,6 +147,8 @@
                                    ("+"  . "1.")
 								   ("1." . "a.")
 								   ))
+  ;; 编辑时检查是否在折叠的不可见区域
+  (org-fold-catch-invisible-edits 'smart)
   ;; 在当前位置插入新标题行还是在当前标题行后插入，这里设置为当前位置
   (org-insert-heading-respect-content nil)
   ;; 设置图片的最大宽度，如果有imagemagick支持将会改变图片实际宽度
@@ -143,17 +156,15 @@
   (org-image-actual-width nil)
   ;; imenu的最大深度，默认为2
   (org-imenu-depth 4)
-  ;; 复制粘贴标题行的时候删除id
-  (org-clone-delete-id t)
-  ;; 上标^下标_是否需要特殊字符包裹，这里设置需要用大括号包裹
-  (org-use-sub-superscripts '{})
-  ;; 粘贴时调整标题行的级别
-  (org-yank-adjusted-subtrees t)
-  (org-ctrl-k-protect-subtree 'error)
-  ;; 编辑时检查是否在折叠的不可见区域
-  (org-fold-catch-invisible-edits 'smart)
   ;; 回车要不要触发链接，这里设置不触发
   (org-return-follows-link nil)
+  ;; 上标^下标_是否需要特殊字符包裹，这里设置需要用大括号包裹
+  (org-use-sub-superscripts '{})
+  ;; 复制粘贴标题行的时候删除id
+  (org-clone-delete-id t)
+  ;; 粘贴时调整标题行的级别
+  (org-yank-adjusted-subtrees t)
+
   ;; TOOD的关键词设置，可以设置不同的组
   (org-todo-keywords '((sequence "TODO(t)" "HOLD(h!)" "WIP(i!)" "WAIT(w!)" "|" "DONE(d!)" "CANCELLED(c@/!)")
 					   (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f!)")))
@@ -197,7 +208,6 @@
 						   ("APPT_WARNTIME_ALL" . "0 5 10 15 20 25 30 45 60")
 						   ("RISK_ALL" . "Low Medium High")
 						   ("STYLE_ALL" . "habit")))
-
   ;; Org columns的默认格式
   (org-columns-default-format "%25ITEM %TODO %SCHEDULED %DEADLINE %3PRIORITY %TAGS %CLOCKSUM %EFFORT{:}")
   ;; 当状态从DONE改成其他状态时，移除 CLOSED: [timestamp]
@@ -226,10 +236,9 @@
   ;; 允许创建新的标题行，但需要确认
   (org-refile-allow-creating-parent-nodes 'confirm)
 
-  ;; goto. We use minibuffer to filter instead of isearch.
-  (org-goto-auto-isearch nil)
-  (org-goto-interface 'outline-path-completion)
- 	 ;; 自动对齐标签
+  ;; 设置标签的默认位置，默认是第77列右对齐
+  ;; (org-tags-column -77)
+  ;; 自动对齐标签
   (org-auto-align-tags t)
   ;; 标签不继承
   (org-use-tag-inheritance nil)
@@ -239,21 +248,30 @@
   (org-use-fast-tag-selection t)
   ;; 标签选择不需要回车确认
   (org-fast-tag-selection-single-key t)
+  ;; 定义了有序属性的标题行也加上 OREDERD 标签
+  (org-track-ordered-property-with-tag t)
+  ;; 始终存在的的标签
+  (org-tag-persistent-alist '(("read"     . ?r)
+							  ("mail"     . ?m)
+							  ("emacs"    . ?e)
+							  ("study"    . ?s)
+							  ("work"     . ?w)))
+  ;; 预定义好的标签
+  (org-tag-alist '((:startgroup)
+				   ("crypt"    . ?c)
+				   ("linux"    . ?l)
+				   ("apple"    . ?a)
+				   ("noexport" . ?n)
+				   ("ignore"   . ?i)
+				   ("toc"      . ?t)
+				   (:endgroup)))
 
-  ;; archive
+  ;; 归档设置
   (org-archive-location "%s_archive::datetree/")
-  ;; id
-  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-  ;; abbreviation for url
-  (org-link-abbrev-alist '(("GitHub" . "https://github.com/")
-                           ("GitLab" . "https://gitlab.com/")
-                           ("Google" . "https://google.com/search?q=")
-                           ("RFCs"   . "https://tools.ietf.org/html/")
-                           ("LWN"    . "https://lwn.net/Articles/")
-                           ("WG21"   . "https://wg21.link/"))))
+  )
+(require 'org-tempo)
 
-
-;; org contrib
+;; Org mode的附加包，有诸多附加功能
 (use-package org-contrib
   :ensure t
   :custom
@@ -262,7 +280,10 @@
 	)
 (require 'org-checklist)
 
-;; org 美化
+; Disable Electric Indent
+(electric-indent-mode -1)
+(setq org-edit-src-content-indentation 0)
+
 (use-package org-modern
   :ensure t
   :hook (after-init . (lambda ()
@@ -275,10 +296,11 @@
   (setq-default line-spacing 0.1)
   ;; tag边框宽度，还可以设置为 `auto' 即自动计算
   (setq org-modern-label-border 1)
+  (setq org-modern-table nil)
   ;; 设置表格竖线宽度，默认为3
-  (setq org-modern-table-vertical 2)
+  ; (setq org-modern-table-vertical 2)
   ;; 设置表格横线为0，默认为0.1
-  (setq org-modern-table-horizontal 0)
+  ; (setq org-modern-table-horizontal 0)
   ;; 复选框美化
   (setq org-modern-checkbox
         '((?X . #("▢✓" 0 2 (composition ((2)))))
@@ -297,7 +319,6 @@
   (setq org-modern-keyword nil)
   )
 
-
 ;; org 链接
 (use-package org-appear
   :ensure t
@@ -309,6 +330,201 @@
   (setq org-appear-autokeywords t)
   (setq org-appear-inside-latex t)
   )
+
+(use-package org-auto-tangle
+  :ensure t
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  (setq org-auto-tangle-default t)
+  )
+
+;; Create structured information quickly
+(use-package org-capture
+  :ensure nil
+  :hook (org-capture-mode . org-capture-setup)
+  :config
+  (with-no-warnings
+    (defun org-capture-setup ()
+      (setq-local org-complete-tags-always-offer-all-agenda-tags t)))
+  :custom
+  (org-capture-use-agenda-date t)
+  (org-capture-templates-contexts nil)
+  (org-capture-templates `(("t" "Tasks" entry (file+headline "tasks.org" "Reminders")
+                            "* TODO %i%?"
+                            :empty-lines-after 1
+                            :prepend t)
+                           ("n" "Notes" entry (file+headline "capture.org" "Notes")
+                            "* %? %^g\n%i\n"
+                            :empty-lines-after 1)
+                           ;; For EWW
+                           ("b" "Bookmarks" entry (file+headline "capture.org" "Bookmarks")
+                            "* %:description\n\n%a%?"
+                            :empty-lines 1
+                            :immediate-finish t)
+                           ("d" "Diary")
+                           ("dt" "Today's TODO list" entry (file+olp+datetree "diary.org")
+                            "* Today's TODO list [/]\n%T\n\n** TODO %?"
+                            :empty-lines 1
+                            :jump-to-captured t)
+                           ("do" "Other stuff" entry (file+olp+datetree "diary.org")
+                            "* %?\n%T\n\n%i"
+                            :empty-lines 1
+                            :jump-to-captured t)
+                           ))
+	)
+
+;; Write codes in org-mode
+(use-package org-src
+  :ensure nil
+  :hook (org-babel-after-execute . org-redisplay-inline-images)
+  :bind (:map org-src-mode-map
+         ;; consistent with separedit/magit
+         ("C-c C-c" . org-edit-src-exit))
+  :custom
+  (org-confirm-babel-evaluate nil)
+  ;; 代码块语法高亮
+  (org-src-fontify-natively t)
+  ;; 使用编程语言的TAB绑定设置
+  (org-src-tab-acts-natively t)
+  ;; 保留代码块前面的空格
+  (org-src-preserve-indentation t)
+  ;; 代码块编辑窗口的打开方式：当前窗口+代码块编辑窗口
+  (org-src-window-setup 'reorganize-frame)
+  ;; 代码块默认前置多少空格
+  (org-edit-src-content-indentation 0)
+
+  (org-src-lang-modes '(("C"      . c)
+                        ("C++"    . c++)
+                        ("bash"   . sh)
+                        ("cpp"    . c++)
+                        ("dot"    . graphviz-dot) ;; was `fundamental-mode'
+                        ("python" . python)
+                        ("elisp"  . emacs-lisp)
+                        ("ocaml"  . tuareg)
+                        ("shell"  . sh)))
+  (org-babel-load-languages '((C          . t)
+                              (dot        . t)
+                              (emacs-lisp . t)
+                              (eshell     . t)
+                              (python     . t)
+                              (shell      . t))))
+
+
+
+(use-package calendar
+  :ensure nil
+  :hook (calendar-today-visible . calendar-mark-today)
+  :custom
+  ;; 是否显示中国节日，我们使用 `cal-chinese-x' 插件
+  (calendar-chinese-all-holidays-flag nil)
+  ;; 是否显示节日
+  (calendar-mark-holidays-flag t)
+  ;; 是否显示Emacs的日记，我们使用org的日记
+  (calendar-mark-diary-entries-flag nil)
+  ;; 数字方式显示时区，如 +0800，默认是字符方式如 CST
+  (calendar-time-zone-style 'numeric)
+  ;; 日期显示方式：year/month/day
+  (calendar-date-style 'iso)
+  ;; 中文天干地支设置
+  (calendar-chinese-celestial-stem ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
+  (calendar-chinese-terrestrial-branch ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
+  ;; 设置中文月份
+  ; (calendar-month-name-array ["一月" "二月" "三月" "四月" "五月" "六月" "七月" "八月" "九月" "十月" "十一月" "十二月"])
+  ;; 设置星期标题显示
+  ; (calendar-day-name-array ["日" "一" "二" "三" "四" "五" "六"])
+  ;; 周一作为一周第一天
+  (calendar-week-start-day 1)
+  )
+
+;; 时间解析增加中文拼音
+(use-package parse-time
+  :ensure nil
+  :defer t
+  :config
+  (setq parse-time-months
+        (append '(("yiy" . 1) ("ery" . 2) ("sany" . 3)
+                  ("siy" . 4) ("wuy" . 5) ("liuy" . 6)
+                  ("qiy" . 7) ("bay" . 8) ("jiuy" . 9)
+                  ("shiy" . 10) ("shiyiy" . 11) ("shiery" . 12)
+                  ("yiyue" . 1) ("eryue" . 2) ("sanyue" . 3)
+                  ("siyue" . 4) ("wuyue" . 5) ("liuyue" . 6)
+                  ("qiyue" . 7) ("bayue" . 8) ("jiuyue" . 9)
+                  ("shiyue" . 10) ("shiyiyue" . 11) ("shieryue" . 12))
+                parse-time-months))
+
+  (setq parse-time-weekdays
+        (append '(("zri" . 0) ("zqi" . 0)
+                  ("zyi" . 1) ("zer" . 2) ("zsan" . 3)
+                  ("zsi" . 4) ("zwu" . 5) ("zliu" . 6)
+                  ("zr" . 0) ("zq" . 0)
+                  ("zy" . 1) ("ze" . 2) ("zs" . 3)
+                  ("zsi" . 4) ("zw" . 5) ("zl" . 6))
+                parse-time-weekdays)))
+
+;; 中国节日设置
+(use-package cal-china-x
+  :ensure t
+  :commands cal-china-x-setup
+  :hook (after-init . cal-china-x-setup)
+  :config
+  ;; 重要节日设置
+  (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+  ;; 所有节日设置
+  (setq cal-china-x-general-holidays
+        '(;;公历节日
+          (holiday-fixed 1 1 "元旦")
+          (holiday-fixed 2 14 "情人节")
+          (holiday-fixed 3 8 "妇女节")
+          (holiday-fixed 3 14 "白色情人节")
+          (holiday-fixed 4 1 "愚人节")
+          (holiday-fixed 5 1 "劳动节")
+          (holiday-fixed 5 4 "青年节")
+          (holiday-float 5 0 2 "母亲节")
+          (holiday-fixed 6 1 "儿童节")
+          (holiday-float 6 0 3 "父亲节")
+          (holiday-fixed 9 10 "教师节")
+          (holiday-fixed 10 1 "国庆节")
+          (holiday-fixed 10 2 "国庆节")
+          (holiday-fixed 10 3 "国庆节")
+          (holiday-fixed 10 24 "程序员节")
+          (holiday-fixed 11 11 "双11购物节")
+          (holiday-fixed 12 25 "圣诞节")
+          ;; 农历节日
+          (holiday-lunar 12 30 "春节" 0)
+          (holiday-lunar 1 1 "春节" 0)
+          (holiday-lunar 1 2 "春节" 0)
+          (holiday-lunar 1 15 "元宵节" 0)
+          (holiday-solar-term "清明" "清明节")
+          (holiday-solar-term "小寒" "小寒")
+          (holiday-solar-term "大寒" "大寒")
+          (holiday-solar-term "立春" "立春")
+          (holiday-solar-term "雨水" "雨水")
+          (holiday-solar-term "惊蛰" "惊蛰")
+          (holiday-solar-term "春分" "春分")
+          (holiday-solar-term "谷雨" "谷雨")
+          (holiday-solar-term "立夏" "立夏")
+          (holiday-solar-term "小满" "小满")
+          (holiday-solar-term "芒种" "芒种")
+          (holiday-solar-term "夏至" "夏至")
+          (holiday-solar-term "小暑" "小暑")
+          (holiday-solar-term "大暑" "大暑")
+          (holiday-solar-term "立秋" "立秋")
+          (holiday-solar-term "处暑" "处暑")
+          (holiday-solar-term "白露" "白露")
+          (holiday-solar-term "秋分" "秋分")
+          (holiday-solar-term "寒露" "寒露")
+          (holiday-solar-term "霜降" "霜降")
+          (holiday-solar-term "立冬" "立冬")
+          (holiday-solar-term "小雪" "小雪")
+          (holiday-solar-term "大雪" "大雪")
+          (holiday-solar-term "冬至" "冬至")
+          (holiday-lunar 5 5 "端午节" 0)
+          (holiday-lunar 8 15 "中秋节" 0)
+          (holiday-lunar 7 7 "七夕情人节" 0)
+          (holiday-lunar 12 8 "腊八节" 0)
+          (holiday-lunar 9 9 "重阳节" 0)))
+  ;; 设置日历的节日，通用节日已经包含了所有节日
+  (setq calendar-holidays (append cal-china-x-general-holidays)))
 
 
 ;; Keep track of tasks
@@ -431,7 +647,6 @@ This function makes sure that dates are aligned for easy reading."
          (expand-file-name "diary.org" org-directory)
          (expand-file-name "habits.org" org-directory)
          (expand-file-name "mail.org" org-directory)
-         (expand-file-name "emacs-config.org" user-emacs-directory)
          ))
   ;; 设置org的日记文件
   (org-agenda-diary-file (expand-file-name "diary.org" org-directory))
@@ -501,73 +716,35 @@ This function makes sure that dates are aligned for easy reading."
   (org-habit-preceding-days 7)
   )
 
-;; Write codes in org-mode
-(use-package org-src
+
+(use-package appt
   :ensure nil
-  :hook (org-babel-after-execute . org-redisplay-inline-images)
-  :bind (:map org-src-mode-map
-         ;; consistent with separedit/magit
-         ("C-c C-c" . org-edit-src-exit))
-  :custom
-  (org-confirm-babel-evaluate nil)
-  ;; 代码块语法高亮
-  (org-src-fontify-natively t)
-  ;; 使用编程语言的TAB绑定设置
-  (org-src-tab-acts-natively t)
-  ;; 保留代码块前面的空格
-  (org-src-preserve-indentation t)
-  ;; 代码块编辑窗口的打开方式：当前窗口+代码块编辑窗口
-  (org-src-window-setup 'reorganize-frame)
-  ;; 代码块默认前置多少空格
-  (org-edit-src-content-indentation 0)
-
-  (org-src-lang-modes '(("C"      . c)
-                        ("C++"    . c++)
-                        ("bash"   . sh)
-                        ("cpp"    . c++)
-                        ("dot"    . graphviz-dot) ;; was `fundamental-mode'
-                        ("python" . python)
-                        ("elisp"  . emacs-lisp)
-                        ("ocaml"  . tuareg)
-                        ("shell"  . sh)))
-  (org-babel-load-languages '((C          . t)
-                              (dot        . t)
-                              (emacs-lisp . t)
-                              (eshell     . t)
-                              (python     . t)
-                              (shell      . t))))
-
-;; Create structured information quickly
-(use-package org-capture
-  :ensure nil
-  :hook (org-capture-mode . org-capture-setup)
+  :hook ((after-init . (lambda () (appt-activate 1)))
+         (org-finalize-agenda . org-agenda-to-appt))
   :config
-  (with-no-warnings
-    (defun org-capture-setup ()
-      (setq-local org-complete-tags-always-offer-all-agenda-tags t)))
-  :custom
-  (org-capture-use-agenda-date t)
-  (org-capture-templates-contexts nil)
-  (org-capture-templates `(;; Tasks
-                           ("t" "Tasks")
-                           ("tt" "Today" entry (file+olp+datetree "tasks.org")
-                            "* %? %^{EFFORT}p"
-                            :prepend t)
-                           ("ti" "Inbox" entry (file+headline "tasks.org" "Inbox")
-                            "* %?\n%i\n")
-                           ("tm" "Mail" entry (file+headline "tasks.org" "Inbox")
-                            "* TODO %^{type|reply to|contact} %^{recipient} about %^{subject} :MAIL:\n")
-                           ;; Capture
-                           ("c" "Capture")
-                           ("cn" "Note" entry (file+headline "capture.org" "Notes")
-                            "* %? %^g\n%i\n"))))
+  ;; 通知提醒
+  (defun appt-display-with-notification (min-to-app new-time appt-msg)
+    (notify-send :title (format "Appointment in %s minutes" min-to-app)
+                 :body appt-msg
+                 :urgency 'critical)
+    (appt-disp-window min-to-app new-time appt-msg))
 
-;; auto tangle
-(use-package org-auto-tangle
-  :ensure t
-  :hook (org-mode . org-auto-tangle-mode)
-  :config
-  (setq org-auto-tangle-default t)
+  ;; 每15分钟更新一次appt
+  (run-at-time t 900 #'org-agenda-to-appt)
+
+  :custom
+  ;; 是否显示日记
+  (appt-display-diary nil)
+  ;; 提醒间隔时间，每15分钟提醒一次
+  (appt-display-interval 15)
+  ;; 模式栏显示提醒
+  (appt-display-mode-line t)
+  ;; 设置提醒响铃
+  (appt-audible t)
+  ;; 提前30分钟提醒
+  (appt-message-warning-time 30)
+  ;; 通知提醒函数
+  (appt-disp-window-function #'appt-display-with-notification)
   )
 
 (provide 'init-org)

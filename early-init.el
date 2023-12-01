@@ -22,4 +22,3 @@
 (setq comp-deferred-compilation nil)
 
 (provide 'early-init)
-;;; early-init.el ends here

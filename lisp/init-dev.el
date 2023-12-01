@@ -49,6 +49,7 @@
          ("C-c t o" . hl-todo-occur)
          ("C-c t s" . hl-todo-rgrep)))
 
+
 ;; Show trailing whitespaces
 (use-package whitespace
   :ensure nil
@@ -239,6 +240,7 @@
 (require 'init-rust)
 (require 'init-ocaml)
 (require 'init-bazel)
+(require 'init-lua)
 (require 'init-haskell)
 (require 'init-python)
 (require 'init-elisp)

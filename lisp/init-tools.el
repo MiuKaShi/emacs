@@ -14,8 +14,16 @@
     "C-x n" "narrow"
     "C-x t" "tab")
   :custom
-  (which-key-idle-delay 0.5)
-  (which-key-add-column-padding 1))
+	(which-key-idle-delay 0.8)
+	(which-key-add-column-padding 1)
+	(which-key-sort-uppercase-first nil)
+	(which-key-max-display-columns nil)
+	(which-key-min-display-lines 6)
+	(which-key-side-window-slot -10)
+	(which-key-side-window-max-height 0.25)
+	(which-key-max-description-length 25)
+	(which-key-separator " → " ))
+
 
 ;; The blazing grep tool
 ;;

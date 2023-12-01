@@ -1,13 +1,3 @@
-;; 禁用一些GUI特性
-(setq use-file-dialog nil
-      inhibit-x-resources t)
-(setq use-dialog-box nil)               ; 鼠标操作不使用对话框
-(setq inhibit-default-init t)           ; 不加载 `default' 库
-(setq inhibit-startup-screen t)         ; 不加载启动画面
-(setq inhibit-startup-message t)        ; 不加载启动消息
-(setq inhibit-startup-buffer-menu t)    ; 不显示缓冲区列表
-
-
 ;; Pixelwise resize
 (setq window-resize-pixelwise t
       frame-resize-pixelwise t)
@@ -21,11 +11,6 @@
 ;; for the key passphrase.
 (setq epg-pinentry-mode 'loopback)
 
-;; Optimize for very long lines
-;; 设置缓冲区的文字方向为从左到右
-(setq-default bidi-paragraph-direction 'left-to-right)
-(setq bidi-inhibit-bpa t)
-
 ;; No backup files
 (setq make-backup-files nil
       auto-save-default nil)
@@ -36,42 +21,19 @@
 ;; Always load the newest file
 (setq load-prefer-newer t)
 
-;; 拷贝粘贴设置
-(setq select-enable-primary nil)        ; 选择文字时不拷贝
-(setq select-enable-clipboard t)        ; 拷贝时使用剪贴板
-
 ;; No gc for font caches
 (setq inhibit-compacting-font-caches t)
-
-;; 以16进制显示字节数
-(setq display-raw-bytes-as-hex t)
-;; 有输入时禁止 `fontification' 相关的函数钩子，能让滚动更顺滑
-(setq redisplay-skip-fontification-on-input t)
-
-;; 禁止响铃
-(setq ring-bell-function 'ignore)
-
-;; 禁止闪烁光标
-(setq blink-cursor-mode nil)
-
-;; 鼠标滚动设置
-(setq scroll-step 2)
-(setq scroll-margin 2)
-(setq hscroll-step 2)
-(setq hscroll-margin 2)
-(setq scroll-conservatively 101)
-(setq scroll-up-aggressively 0.01)
-(setq scroll-down-aggressively 0.01)
-(setq scroll-preserve-screen-position 'always)
 
 ;; The nano style for truncated long lines.
 (setq auto-hscroll-mode 'current-line)
 
-;; 对于高的行禁止自动垂直滚动
-(setq auto-window-vscroll nil)
-
 ;; 在光标处而非鼠标所在位置粘贴
 (setq mouse-yank-at-point t)
+
+;; 设置缓冲区的文字方向为从左到右
+(setq bidi-paragraph-direction 'left-to-right)
+;; 禁止使用双向括号算法
+;; (setq bidi-inhibit-bpa t)
 
 ;; 设置自动折行宽度为80个字符，默认值为70
 (setq-default fill-column 80)
@@ -79,14 +41,9 @@
 ;; 设置大文件阈值为100MB，默认10MB
 (setq large-file-warning-threshold 100000000)
 
-;; 设置新分屏打开的位置的阈值
-(setq split-width-threshold (assoc-default 'width default-frame-alist))
-(setq split-height-threshold nil)
-
-;; Treats the `_' as a word constituent
-(add-hook 'after-change-major-mode-hook
-          (lambda ()
-            (modify-syntax-entry ?_ "w")))
+;; 拷贝粘贴设置
+(setq select-enable-primary nil)        ; 选择文字时不拷贝
+(setq select-enable-clipboard t)        ; 拷贝时使用剪贴板
 
 ;; TAB键设置，在Emacs里不使用TAB键，所有的TAB默认为4个空格
 (setq-default indent-tabs-mode nil)
@@ -95,8 +52,14 @@
 ;; 设置剪贴板历史长度300，默认为60
 (setq kill-ring-max 200)
 
-;; Font size
-(set-face-attribute 'default nil :height 200)
+;; 在命令行里支持鼠标
+(xterm-mouse-mode 1)
+
+;; Treats the `_' as a word constituent
+(add-hook 'after-change-major-mode-hook
+          (lambda ()
+            (modify-syntax-entry ?_ "w")))
+
 
 ;; Sane defaults
 (setq use-short-answers t)
@@ -132,11 +95,11 @@
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t))
 
-;; Show line/column number and more
+;; 简单设定
 (use-package simple
   :ensure nil
   :custom
-  ;; show line/column/filesize in modeline
+	;; 在模式栏上显示当前光标的列号
   (line-number-mode t)
 	;; 在模式栏上显示当前光标的列号
   (column-number-mode t)
@@ -182,15 +145,12 @@
   :hook (after-init . save-place-mode))
 
 ;; Highlight current line in GUI
-(use-package hl-line
-  :ensure nil
-  :when (display-graphic-p)
-  :hook (after-init . global-hl-line-mode))
+; (use-package hl-line
+;   :ensure nil
+;   :when (display-graphic-p)
+;   :hook (after-init . global-hl-line-mode))
 
 ;; Enable `repeat-mode' to reduce key sequence length
-;;
-;; If we have been idle for `repeat-exit-timeout' seconds, exit the repeated
-;; state.
 (use-package repeat
   :ensure nil
   :custom
@@ -199,7 +159,6 @@
   (repeat-exit-key (kbd "RET")))
 
 ;; Server mode.
-;; Use emacsclient to connect
 (use-package server
   :ensure nil
   :hook (after-init . server-mode))
@@ -251,140 +210,6 @@
   (completions-max-height 13)
   (completions-detailed t))
 
-;; 日历
-(use-package calendar
-  :ensure nil
-  :hook (calendar-today-visible . calendar-mark-today)
-  :custom
-  ;; 是否显示中国节日，我们使用 `cal-chinese-x' 插件
-  (calendar-chinese-all-holidays-flag nil)
-  ;; 是否显示节日
-  (calendar-mark-holidays-flag t)
-  ;; 是否显示Emacs的日记，我们使用org的日记
-  (calendar-mark-diary-entries-flag nil)
-  ;; 数字方式显示时区，如 +0800，默认是字符方式如 CST
-  (calendar-time-zone-style 'numeric)
-  ;; 日期显示方式：year/month/day
-  (calendar-date-style 'iso)
-  ;; 中文天干地支设置
-  (calendar-chinese-celestial-stem ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
-  (calendar-chinese-terrestrial-branch ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
-  ;; 设置中文月份
-  (calendar-month-name-array ["一月" "二月" "三月" "四月" "五月" "六月" "七月" "八月" "九月" "十月" "十一月" "十二月"])
-  ;; 设置星期标题显示
-  (calendar-day-name-array ["日" "一" "二" "三" "四" "五" "六"])
-  ;; 周一作为一周第一天
-  (calendar-week-start-day 1)
-  )
-
-;; 时间解析增加中文拼音
-(use-package parse-time
-  :ensure nil
-  :defer t
-  :config
-  (setq parse-time-months
-        (append '(("yiy" . 1) ("ery" . 2) ("sany" . 3)
-                  ("siy" . 4) ("wuy" . 5) ("liuy" . 6)
-                  ("qiy" . 7) ("bay" . 8) ("jiuy" . 9)
-                  ("shiy" . 10) ("shiyiy" . 11) ("shiery" . 12)
-                  ("yiyue" . 1) ("eryue" . 2) ("sanyue" . 3)
-                  ("siyue" . 4) ("wuyue" . 5) ("liuyue" . 6)
-                  ("qiyue" . 7) ("bayue" . 8) ("jiuyue" . 9)
-                  ("shiyue" . 10) ("shiyiyue" . 11) ("shieryue" . 12))
-                parse-time-months))
-
-  (setq parse-time-weekdays
-        (append '(("zri" . 0) ("zqi" . 0)
-                  ("zyi" . 1) ("zer" . 2) ("zsan" . 3)
-                  ("zsi" . 4) ("zwu" . 5) ("zliu" . 6)
-                  ("zr" . 0) ("zq" . 0)
-                  ("zy" . 1) ("ze" . 2) ("zs" . 3)
-                  ("zsi" . 4) ("zw" . 5) ("zl" . 6))
-                parse-time-weekdays)))
-
-;; 中国节日设置
-(use-package cal-china-x
-  :ensure t
-  :commands cal-china-x-setup
-  :hook (after-init . cal-china-x-setup)
-  :config
-  ;; 重要节日设置
-  (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
-  ;; 所有节日设置
-  (setq cal-china-x-general-holidays
-        '(;;公历节日
-          (holiday-fixed 1 1 "元旦")
-          (holiday-fixed 2 14 "情人节")
-          (holiday-fixed 3 8 "妇女节")
-          (holiday-fixed 3 14 "白色情人节")
-          (holiday-fixed 4 1 "愚人节")
-          (holiday-fixed 5 1 "劳动节")
-          (holiday-fixed 5 4 "青年节")
-          (holiday-float 5 0 2 "母亲节")
-          (holiday-fixed 6 1 "儿童节")
-          (holiday-float 6 0 3 "父亲节")
-          (holiday-fixed 9 10 "教师节")
-          (holiday-fixed 10 1 "国庆节")
-          (holiday-fixed 10 2 "国庆节")
-          (holiday-fixed 10 3 "国庆节")
-          (holiday-fixed 10 24 "程序员节")
-          (holiday-fixed 11 11 "双11购物节")
-          (holiday-fixed 12 25 "圣诞节")
-          ;; 农历节日
-          (holiday-lunar 12 30 "春节" 0)
-          (holiday-lunar 1 1 "春节" 0)
-          (holiday-lunar 1 2 "春节" 0)
-          (holiday-lunar 1 15 "元宵节" 0)
-          (holiday-solar-term "清明" "清明节")
-          (holiday-solar-term "小寒" "小寒")
-          (holiday-solar-term "大寒" "大寒")
-          (holiday-solar-term "立春" "立春")
-          (holiday-solar-term "雨水" "雨水")
-          (holiday-solar-term "惊蛰" "惊蛰")
-          (holiday-solar-term "春分" "春分")
-          (holiday-solar-term "谷雨" "谷雨")
-          (holiday-solar-term "立夏" "立夏")
-          (holiday-solar-term "小满" "小满")
-          (holiday-solar-term "芒种" "芒种")
-          (holiday-solar-term "夏至" "夏至")
-          (holiday-solar-term "小暑" "小暑")
-          (holiday-solar-term "大暑" "大暑")
-          (holiday-solar-term "立秋" "立秋")
-          (holiday-solar-term "处暑" "处暑")
-          (holiday-solar-term "白露" "白露")
-          (holiday-solar-term "秋分" "秋分")
-          (holiday-solar-term "寒露" "寒露")
-          (holiday-solar-term "霜降" "霜降")
-          (holiday-solar-term "立冬" "立冬")
-          (holiday-solar-term "小雪" "小雪")
-          (holiday-solar-term "大雪" "大雪")
-          (holiday-solar-term "冬至" "冬至")
-          (holiday-lunar 5 5 "端午节" 0)
-          (holiday-lunar 8 15 "中秋节" 0)
-          (holiday-lunar 7 7 "七夕情人节" 0)
-          (holiday-lunar 12 8 "腊八节" 0)
-          (holiday-lunar 9 9 "重阳节" 0)))
-  ;; 设置日历的节日，通用节日已经包含了所有节日
-  (setq calendar-holidays (append cal-china-x-general-holidays)))
-
-
-;; Appointment
-(use-package appt
-  :ensure nil
-  :hook (after-init . appt-activate)
-  :config
-  (defun appt-display-with-notification (min-to-app new-time appt-msg)
-    (notify-send :title (format "Appointment in %s minutes" min-to-app)
-                 :body appt-msg
-                 :urgency 'critical)
-    (appt-disp-window min-to-app new-time appt-msg))
-  :custom
-  (appt-audible nil)
-  (appt-display-diary nil)
-  (appt-display-interval 5)
-  (appt-display-mode-line t)
-  (appt-message-warning-time 15)
-  (appt-disp-window-function #'appt-display-with-notification))
 
 ;; Build regexp with visual feedback
 (use-package re-builder
@@ -396,20 +221,6 @@
          ("C-c C-n" . reb-next-match))
   :custom
   (reb-re-syntax 'string))
-
-;; window layout manager
-;;
-;; gt next-tab
-;; gT prev-tab
-(use-package tab-bar
-  :ensure nil
-  :hook (after-init . tab-bar-mode)
-  :custom
-  (tab-bar-show nil)
-  (tab-bar-tab-hints t)
-  (tab-bar-close-button-show nil)
-  (tab-bar-tab-name-function 'tab-bar-tab-name-all)
-  (tab-bar-format '(tab-bar-format-tabs tab-bar-separator)))
 
 (use-package newcomment
   :ensure nil
@@ -609,6 +420,8 @@ Else, call `comment-or-uncomment-region' on the current line."
   :when (eq system-type 'darwin)
   :hook (after-init . exec-path-from-shell-initialize))
 
+;; 配置所有的编码为UTF-8，参考：
+;; https://thraxys.wordpress.com/2016/01/13/utf-8-in-emacs-everywhere-forever/
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
