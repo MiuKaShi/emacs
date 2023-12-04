@@ -3,6 +3,7 @@
 (defun shell-mode-common-init ()
   "The common initialization procedure for term/shell."
   (setq-local scroll-margin 0)
+	;; 不自动换行
   (setq-local truncate-lines t)
   (setq-local global-hl-line-mode nil))
 

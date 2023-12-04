@@ -21,11 +21,14 @@
 ;; Always load the newest file
 (setq load-prefer-newer t)
 
-;; No gc for font caches
+;; 不压缩字体缓存，加快 GC
 (setq inhibit-compacting-font-caches t)
 
 ;; The nano style for truncated long lines.
 (setq auto-hscroll-mode 'current-line)
+
+;关闭启动空白buffer, 这个buffer会干扰session恢复
+(setq initial-scratch-message "")
 
 ;; 在光标处而非鼠标所在位置粘贴
 (setq mouse-yank-at-point t)
@@ -92,6 +95,8 @@
   :ensure nil
   :hook (after-init . show-paren-mode)
   :custom
+  (show-paren-delay 0.1)
+  (show-paren-highlight-openparen t)
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t))
 
@@ -396,12 +401,9 @@ Else, call `comment-or-uncomment-region' on the current line."
   :ensure nil
   :hook (after-init . recentf-mode)
   :custom
-  (recentf-max-saved-items 300)
+  (recentf-max-saved-items 200)
   (recentf-auto-cleanup 'never)
-  (recentf-exclude '(;; Folders on MacOS start
-                     "^/private/tmp/"
-                     "^/var/folders/"
-                     ;; Folders on MacOS end
+  (recentf-exclude '(
                      "^/tmp/"
                      "/ssh\\(x\\)?:"
                      "/su\\(do\\)?:"
