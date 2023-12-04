@@ -35,7 +35,7 @@
   (evil-want-fine-undo t)
   (evil-want-C-g-bindings t)
   (evil-want-abbrev-expand-on-insert-exit nil)
-  (evil-symbol-word-search t)
+  (evil-symbol-word-search t))
 
 (use-package evil-surround
   :ensure t
