@@ -106,6 +106,8 @@ Optional for Org-mode file: `LINK'."
   (org-modules '(ol-bibtex ol-gnus ol-info ol-eww org-habit org-protocol))
   ;; 在按M-RET时，是否根据光标所在的位置分行，这里设置为是
   ;; (org-M-RET-may-split-line '((default . nil)))
+
+
   ;; 一些Org mode自带的美化设置
   ;; 标题行美化
   (org-fontify-whole-heading-line t)
@@ -134,7 +136,7 @@ Optional for Org-mode file: `LINK'."
   ;; 自动启用缩进
   (org-startup-indented nil)
   ;; 根据标题栏自动缩进文本
-  (org-adapt-indentation nil)
+  (org-adapt-indentation t)
   ;; 自动显示图片
   (org-startup-with-inline-images t)
   ;; 默认以Overview的模式展示标题行
@@ -144,7 +146,7 @@ Optional for Org-mode file: `LINK'."
   ;; 列表的下一级设置
   (org-list-demote-modify-bullet '(
 								   ("-"  . "+")
-                                   ("+"  . "1.")
+                   ("+"  . "1.")
 								   ("1." . "a.")
 								   ))
   ;; 编辑时检查是否在折叠的不可见区域
@@ -153,7 +155,7 @@ Optional for Org-mode file: `LINK'."
   (org-insert-heading-respect-content nil)
   ;; 设置图片的最大宽度，如果有imagemagick支持将会改变图片实际宽度
   ;; 四种设置方法：(1080), 1080, t, nil
-  (org-image-actual-width nil)
+  (org-image-actual-width 400)
   ;; imenu的最大深度，默认为2
   (org-imenu-depth 4)
   ;; 回车要不要触发链接，这里设置不触发
@@ -167,16 +169,17 @@ Optional for Org-mode file: `LINK'."
 
   ;; TOOD的关键词设置，可以设置不同的组
   (org-todo-keywords '((sequence "TODO(t)" "HOLD(h!)" "WIP(i!)" "WAIT(w!)" "|" "DONE(d!)" "CANCELLED(c@/!)")
-					   (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f!)")))
+					   (sequence "REPORT(r)" "STUDY(s)" "KNOWNCAUSE(k)" "|" "FIXED(f!)")))
   ;; TODO关键词的样式设置
-  (org-todo-keyword-faces '(("TODO"       :foreground "#7c7c75" :weight bold)
+  (org-todo-keyword-faces '(
+							("TODO"       :foreground "#50a14f" :weight bold)
 							("HOLD"       :foreground "#feb24c" :weight bold)
 							("WIP"        :foreground "#0098dd" :weight bold)
 							("WAIT"       :foreground "#9f7efe" :weight bold)
-							("DONE"       :foreground "#50a14f" :weight bold)
+							("DONE"       :foreground "#7c7c75" :weight bold)
 							("CANCELLED"  :foreground "#ff6480" :weight bold)
 							("REPORT"     :foreground "magenta" :weight bold)
-							("BUG"        :foreground "red"     :weight bold)
+							("STUDY"      :foreground "red"     :weight bold)
 							("KNOWNCAUSE" :foreground "yellow"  :weight bold)
 							("FIXED"      :foreground "green"   :weight bold)))
   ;; 当标题行状态变化时标签同步发生的变化
@@ -294,13 +297,7 @@ Optional for Org-mode file: `LINK'."
   (setq org-modern-star ["◉" "○" "✸" "✳" "◈" "◇" "✿" "❀" "✜"])
   ;; 额外的行间距，0.1表示10%，1表示1px
   (setq-default line-spacing 0.1)
-  ;; tag边框宽度，还可以设置为 `auto' 即自动计算
   (setq org-modern-label-border 1)
-  (setq org-modern-table nil)
-  ;; 设置表格竖线宽度，默认为3
-  ; (setq org-modern-table-vertical 2)
-  ;; 设置表格横线为0，默认为0.1
-  ; (setq org-modern-table-horizontal 0)
   ;; 复选框美化
   (setq org-modern-checkbox
         '((?X . #("▢✓" 0 2 (composition ((2)))))
@@ -317,6 +314,11 @@ Optional for Org-mode file: `LINK'."
   (setq org-modern-block-name nil)
   ;; #+关键字美化，我们使用了 `prettify-symbols-mode'
   (setq org-modern-keyword nil)
+	(setq org-modern-tag nil)
+  (setq org-modern-priority nil)
+  (setq org-modern-table nil)
+  (setq org-modern-todo nil)
+  (setq org-modern-timestamp nil)
   )
 
 ;; org 链接
@@ -324,12 +326,11 @@ Optional for Org-mode file: `LINK'."
   :ensure t
   :hook (org-mode . org-appear-mode)
   :config
-  (setq org-appear-autolinks t)
-  (setq org-appear-autosubmarkers t)
-  (setq org-appear-autoentities t)
-  (setq org-appear-autokeywords t)
-  (setq org-appear-inside-latex t)
-  )
+  (setq org-hide-emphasis-markers t)		;; A default setting that needs to be t for org-appear
+  (setq org-appear-autoemphasis t)		;; Enable org-appear on emphasis (bold, italics, etc)
+  (setq org-appear-autolinks nil)		;; Don't enable on links
+  (setq org-appear-autosubmarkers t))	;; Enable on subscript and superscript
+
 
 (use-package org-auto-tangle
   :ensure t
@@ -486,43 +487,11 @@ Optional for Org-mode file: `LINK'."
           (holiday-fixed 10 1 "国庆节")
           (holiday-fixed 10 2 "国庆节")
           (holiday-fixed 10 3 "国庆节")
-          (holiday-fixed 10 24 "程序员节")
-          (holiday-fixed 11 11 "双11购物节")
           (holiday-fixed 12 25 "圣诞节")
           ;; 农历节日
-          (holiday-lunar 12 30 "春节" 0)
-          (holiday-lunar 1 1 "春节" 0)
-          (holiday-lunar 1 2 "春节" 0)
-          (holiday-lunar 1 15 "元宵节" 0)
-          (holiday-solar-term "清明" "清明节")
-          (holiday-solar-term "小寒" "小寒")
-          (holiday-solar-term "大寒" "大寒")
-          (holiday-solar-term "立春" "立春")
-          (holiday-solar-term "雨水" "雨水")
-          (holiday-solar-term "惊蛰" "惊蛰")
-          (holiday-solar-term "春分" "春分")
-          (holiday-solar-term "谷雨" "谷雨")
-          (holiday-solar-term "立夏" "立夏")
-          (holiday-solar-term "小满" "小满")
-          (holiday-solar-term "芒种" "芒种")
-          (holiday-solar-term "夏至" "夏至")
-          (holiday-solar-term "小暑" "小暑")
-          (holiday-solar-term "大暑" "大暑")
-          (holiday-solar-term "立秋" "立秋")
-          (holiday-solar-term "处暑" "处暑")
-          (holiday-solar-term "白露" "白露")
-          (holiday-solar-term "秋分" "秋分")
-          (holiday-solar-term "寒露" "寒露")
-          (holiday-solar-term "霜降" "霜降")
-          (holiday-solar-term "立冬" "立冬")
-          (holiday-solar-term "小雪" "小雪")
-          (holiday-solar-term "大雪" "大雪")
-          (holiday-solar-term "冬至" "冬至")
-          (holiday-lunar 5 5 "端午节" 0)
-          (holiday-lunar 8 15 "中秋节" 0)
-          (holiday-lunar 7 7 "七夕情人节" 0)
-          (holiday-lunar 12 8 "腊八节" 0)
-          (holiday-lunar 9 9 "重阳节" 0)))
+          ; (holiday-lunar 12 30 "春节" 0)
+					)
+				)
   ;; 设置日历的节日，通用节日已经包含了所有节日
   (setq calendar-holidays (append cal-china-x-general-holidays)))
 
