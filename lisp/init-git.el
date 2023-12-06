@@ -1,5 +1,10 @@
 ;;; init-git.el --- Git is awesome -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;; Explicit binding makes it load lazily although it's the default.
 ;; See `magit-define-global-key-bindings' for more information.
 (use-package magit

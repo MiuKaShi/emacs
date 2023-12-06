@@ -1,3 +1,10 @@
+;;; init-base.el --- base setting -*- lexical-binding: t -*-
+
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;; Pixelwise resize
 (setq window-resize-pixelwise t
       frame-resize-pixelwise t)
@@ -20,9 +27,6 @@
 
 ;; Always load the newest file
 (setq load-prefer-newer t)
-
-;; 不压缩字体缓存，加快 GC
-(setq inhibit-compacting-font-caches t)
 
 ;; The nano style for truncated long lines.
 (setq auto-hscroll-mode 'current-line)
@@ -94,11 +98,14 @@
 (use-package paren
   :ensure nil
   :hook (after-init . show-paren-mode)
-  :custom
-  (show-paren-delay 0.1)
-  (show-paren-highlight-openparen t)
-  (show-paren-when-point-inside-paren t)
-  (show-paren-when-point-in-periphery t))
+  :config
+  (setq show-paren-delay 0.1
+        show-paren-highlight-openparen t
+        show-paren-when-point-inside-paren t
+        show-paren-when-point-in-periphery t))
+
+(setq sentence-end-double-space nil) ;; Sentences end with one space
+(setq bookmark-set-fringe-mark nil)
 
 ;; 简单设定
 (use-package simple
@@ -108,7 +115,6 @@
   (line-number-mode t)
 	;; 在模式栏上显示当前光标的列号
   (column-number-mode t)
-  (size-indication-mode t)
   ;; No visual feedback on copy/delete.
   (copy-region-blink-delay 0)
   (delete-pair-blink-delay 0)
@@ -416,26 +422,22 @@ Else, call `comment-or-uncomment-region' on the current line."
   :ensure t
   :commands try try-and-refresh)
 
-;; MacOS specific
-(use-package exec-path-from-shell
-  :ensure t
-  :when (eq system-type 'darwin)
-  :hook (after-init . exec-path-from-shell-initialize))
 
 ;; 配置所有的编码为UTF-8，参考：
-;; https://thraxys.wordpress.com/2016/01/13/utf-8-in-emacs-everywhere-forever/
-(setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(setenv "LANG" "en_US.UTF-8")
+(setenv "LC_ALL" "en_US.UTF-8")
+(setenv "LC_CTYPE" "en_US.UTF-8")
+
+;; Set UTF-8 as the default coding system
+(set-charset-priority 'unicode)
 (set-default-coding-systems 'utf-8)
-(set-language-environment 'utf-8)
+(set-selection-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
 (set-clipboard-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
-(modify-coding-system-alist 'process "*" 'utf-8)
-(when (display-graphic-p)
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+(setq locale-coding-system 'utf-8)
 
 (provide 'init-base)

@@ -1,3 +1,10 @@
+;;; init-keymaps.el --- keymaps -*- lexical-binding: t -*-
+
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;; 解除不常用的快捷键定义
 (global-set-key (kbd "C-z") nil)
 (global-set-key (kbd "s-q") nil)

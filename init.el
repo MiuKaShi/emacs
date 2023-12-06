@@ -1,4 +1,10 @@
-;; Increase how much is read from processes in a single chunk (default is 4kb).
+;;; Increase how much is read from processes in a single chunk (default is 4kb).
+
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;; `lsp-mode' benefits from that.
 (setq read-process-output-max (* 4 1024 1024))
 

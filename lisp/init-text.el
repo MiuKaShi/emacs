@@ -1,5 +1,10 @@
 ;;; init-text.el --- Writing -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;; Pixel alignment for org/markdown tables
 (use-package valign
   :ensure t

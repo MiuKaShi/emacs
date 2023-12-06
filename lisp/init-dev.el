@@ -1,5 +1,12 @@
 ;;; init-dev.el --- Programming development -*- lexical-binding: t -*-
+
+;;; Commentary:
+;;
+
+;;; Code:
+
 (require 'init-macros)
+
 
 ;; Compilation Mode
 (use-package compile
@@ -37,18 +44,6 @@
   :hook (prog-mode . spdx-tempo-setup)
   :custom
   (spdx-ignore-deprecated t))
-
-;; Highlight TODO
-(use-package hl-todo
-  :ensure t
-  :hook (after-init . global-hl-todo-mode)
-  :bind (:map hl-todo-mode-map
-         ("C-c t p" . hl-todo-previous)
-         ("C-c t n" . hl-todo-next)
-         ("C-c t i" . hl-todo-insert)
-         ("C-c t o" . hl-todo-occur)
-         ("C-c t s" . hl-todo-rgrep)))
-
 
 ;; Show trailing whitespaces
 (use-package whitespace

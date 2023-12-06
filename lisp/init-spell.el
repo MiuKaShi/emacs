@@ -1,5 +1,11 @@
 ;;; init-spell.el --- Spell checker -*- lexical-binding: t -*-
 ;; z= `ispell-word'
+
+;;; Commentary:
+;;
+
+;;; Code:
+
 (use-package ispell
   :ensure nil
   :bind (("C-c i c" . ispell-comments-and-strings)
@@ -27,10 +33,21 @@
 ;; Spell check on-the-fly
 (use-package flyspell
   :ensure nil
-  :custom
-  ;; Use M-C-i instead if M-TAB is shadowed by your window manager
-  (flyspell-use-meta-tab t)
-  (flyspell-issue-welcome-flag nil)
-  (flyspell-issue-message-flag nil))
+  :config
+  (add-to-list 'ispell-skip-region-alist '("~" "~"))
+  (add-to-list 'ispell-skip-region-alist '("=" "="))
+  (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC"))
+  (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_EXPORT" . "^#\\+END_EXPORT"))
+  (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_EXPORT" . "^#\\+END_EXPORT"))
+  (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
+
+  (dolist (mode '(
+                  ;;org-mode-hook
+                  mu4e-compose-mode-hook))
+    (add-hook mode (lambda () (flyspell-mode 1))))
+
+  (setq flyspell-issue-welcome-flag nil
+				flyspell-use-meta-tab t
+        flyspell-issue-message-flag nil))
 
 (provide 'init-spell)

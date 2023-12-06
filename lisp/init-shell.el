@@ -1,5 +1,10 @@
 ;;; init-shell.el --- All about shell/term -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 (defun shell-mode-common-init ()
   "The common initialization procedure for term/shell."
   (setq-local scroll-margin 0)

@@ -1,3 +1,10 @@
+;;; init.el --- The main entry for emacs -*- lexical-binding: t -*-
+
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;; 设置垃圾回收参数
 (setq gc-cons-threshold most-positive-fixnum)
 (setq gc-cons-percentage 0.6)
@@ -29,5 +36,13 @@
 
 ;; 在这个阶段不编译
 (setq comp-deferred-compilation nil)
+
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+(setq fast-but-imprecise-scrolling t)
+
+;; 不压缩字体缓存，加快 GC
+(setq inhibit-compacting-font-caches t)
+
 
 (provide 'early-init)

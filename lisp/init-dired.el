@@ -1,5 +1,10 @@
 ;;; init-dired.el --- dired tweaks -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;; Use ( to toggle dired-hide-details-mode
 (use-package dired
   :ensure nil

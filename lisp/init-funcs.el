@@ -1,5 +1,10 @@
 ;;; init-funcs.el --- core functions -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;;;###autoload
 (defun +rename-current-file (newname)
   "Rename current visiting file to NEWNAME.
@@ -144,6 +149,60 @@ one, an error is signaled."
       ;; move this one to top
       (set-window-buffer other-win buf-this-buf)
       (select-window other-win))))
+
+
+(defun my/system-clipboard-to-emacs-clipboard ()
+  "Set Emacs kill ring to contents of system clipboard."
+  (interactive)
+  (kill-new (simpleclip-get-contents)))
+
+
+(defvar my-default-line-spacing 0 "Baseline line spacing.")
+(setq-default my-default-line-spacing 0)
+(defun my/org-setup ()
+  (org-indent-mode) ;; Keeps org items like text under headings, lists, nicely indented
+  (visual-line-mode 1) ;; Nice line wrapping
+  (centered-cursor-mode) ;; Enable centered cursor mode
+  (hl-prog-extra-mode) ;; Highlighting with regexps
+  (setq-local line-spacing (+ my-default-line-spacing 2)) ;; A bit more line spacing for orgmode
+  (valign-mode)
+  )
+
+(defun my/prettify-symbols-setup ()
+  ;; checkboxes
+  (push '("[ ]" .  "☐") prettify-symbols-alist)
+  (push '("[X]" . "☑" ) prettify-symbols-alist)
+  ;; (push '("[X]" . "☒" ) prettify-symbols-alist)
+  (push '("[-]" . "❍" ) prettify-symbols-alist)
+
+  ;; org-babel
+  (push '("#+BEGIN_SRC" . ?≫) prettify-symbols-alist)
+  (push '("#+END_SRC" . ?≫) prettify-symbols-alist)
+  (push '("#+begin_src" . ?≫) prettify-symbols-alist)
+  (push '("#+end_src" . ?≫) prettify-symbols-alist)
+
+  (push '("#+BEGIN_QUOTE" . ?❝) prettify-symbols-alist)
+  (push '("#+END_QUOTE" . ?❞) prettify-symbols-alist)
+
+  ;; (push '("#+BEGIN_SRC python" . ) prettify-symbols-alist) ;; This is the Python symbol. Comes up weird for some reason
+  (push '("#+RESULTS:" . ?≚ ) prettify-symbols-alist)
+
+  ;; drawers
+  (push '(":PROPERTIES:" . ?) prettify-symbols-alist)
+
+  ;; tags
+  ;; (push '(":Misc:" . "" ) prettify-symbols-alist)
+
+  (prettify-symbols-mode))
+
+
+(defun my/save-and-close-this-buffer (buffer)
+  "Saves and closes given buffer."
+  (if (get-buffer buffer)
+	  (let ((b (get-buffer buffer)))
+		(save-buffer b)
+		(kill-buffer b))))
+
 
 
 (provide 'init-funcs)

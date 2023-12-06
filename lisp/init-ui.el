@@ -1,4 +1,10 @@
-;; theme
+;;; init-ui.el --- ui setting -*- lexical-binding: t -*-
+
+;;; Commentary:
+;;
+
+;;; Code:
+
 (use-package doom-themes
   :ensure t
   :config
@@ -7,8 +13,8 @@
   (doom-themes-org-config)
 
   (let ((theme (if (display-graphic-p)
-                   'doom-ayu-dark
-                 'doom-tokyo-night)))
+                   'doom-gruvbox
+                 'doom-gruvbox)))
     (load-theme theme t)))
 
 (use-package doom-modeline
@@ -19,8 +25,13 @@
   (doom-modeline-mu4e nil)
   (doom-modeline-gnus nil)
   (doom-modeline-github nil)
+	(doom-modeline-icon t)
+	(doom-modeline-modal-icon nil)
   (doom-modeline-persp-name nil)
+	(doom-modeline-major-mode-icon t)
+	(doom-modeline-major-mode-color-icon nil)
   (doom-modeline-unicode-fallback t)
+	(doom-modeline-buffer-state-icon nil)
 	(doom-modeline-lsp-icon t)
   (doom-modeline-enable-word-count nil))
 
@@ -154,20 +165,22 @@
 ;; Uncomment the following line if line spacing needs adjusting.
 (setq-default line-spacing 0.12)
 
-;; transparency
-(set-face-attribute 'highlight nil :foreground 'unspecified)
-(if window-system (progn
-  (set-background-color "Black")
-  (set-foreground-color "LightGray")
-  (set-cursor-color "Gray")
-  (set-frame-parameter nil 'alpha 75))) ; 透明度
-(defun set-transparency ()
-  "set frame transparency"
-  (set-frame-parameter nil 'alpha 75))  ; 透明度
-(defun set-alpha (alpha-num)
-  "set frame parameter 'alpha"
-  (interactive "nAlpha: ")
-  (set-frame-parameter nil 'alpha (cons alpha-num '(75))))
+(set-frame-parameter nil 'alpha-background 85)
+(add-to-list 'default-frame-alist '(alpha-background . 85))
 
+; transparency
+; (set-face-attribute 'highlight nil :foreground 'unspecified)
+; (if window-system (progn
+;   (set-background-color "Black")
+;   (set-foreground-color "LightGray")
+;   (set-cursor-color "Gray")
+;   (set-frame-parameter nil 'alpha 75))) ; 透明度
+; (defun set-transparency ()
+;   "set frame transparency"
+;   (set-frame-parameter nil 'alpha 75))  ; 透明度
+; (defun set-alpha (alpha-num)
+;   "set frame parameter 'alpha"
+;   (interactive "nAlpha: ")
+;   (set-frame-parameter nil 'alpha (cons alpha-num '(75))))
 
 (provide 'init-ui)

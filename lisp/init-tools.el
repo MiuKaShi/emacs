@@ -1,5 +1,10 @@
 ;;; init-tools.el --- We all like productive tools -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;; Tips for next keystroke
 (use-package which-key
   :ensure t
@@ -23,6 +28,30 @@
 	(which-key-side-window-max-height 0.25)
 	(which-key-max-description-length 25)
 	(which-key-separator " → " ))
+
+
+(use-package hl-prog-extra
+  :ensure t
+  :commands (hl-prog-extra-mode)
+  :config
+  (setq hl-prog-extra-list
+        (list
+         '("\\<\\(TODO\\|NOTE\\)\\(([^)+]+)\\)?" 0 comment
+           (:weight bold :inherit diff-removed))
+         ;; Match TKs in quotation marks (hl-prog-extra sees them as strings)
+         '("\\(TK\\)+" 0 string '(:weight bold :inherit font-lock-warning-face))
+         ;; Match TKs not in quotation marks
+         '("\\(TK\\)+" 0 nil '(:weight bold :inherit font-lock-warning-face))))
+  (global-hl-prog-extra-mode))
+
+
+(use-package centered-cursor-mode
+  :ensure t
+	:diminish centered-cursor-mode)
+
+(use-package hide-mode-line
+  :ensure t
+  :commands (hide-mode-line-mode))
 
 
 ;; The blazing grep tool
@@ -88,10 +117,16 @@
 ;; GC optimization
 (use-package gcmh
   :ensure t
+  :diminish gcmh-mode
   :hook (after-init . gcmh-mode)
-  :custom
-  (gcmh-idle-delay 10)
-  (gcmh-high-cons-threshold #x6400000)) ;; 100 MB
+  :config
+  (setq gcmh-idle-delay 5
+        gcmh-high-cons-threshold (* 16 1024 1024)))  ; 16mb
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-percentage 0.1))) ;; Default value for `gc-cons-percentage'
+
 
 ;; Write documentation comment in an easy way
 (use-package separedit

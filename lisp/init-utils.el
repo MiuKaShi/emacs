@@ -1,5 +1,10 @@
 ;;; init-utils.el --- Utilities -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 (require 'url)
 (require 'json)
 

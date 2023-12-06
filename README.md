@@ -1,2 +1,3 @@
 # emacs
-configs for emacs
+
+Configs for emacs-gtd

@@ -1,5 +1,10 @@
 ;;; init-lsp.el --- The completion engine and lsp client -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 ;; 'company-mode' has an online manual now.
 ;;
 ;; https://company-mode.github.io/manual/

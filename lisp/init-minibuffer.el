@@ -1,5 +1,10 @@
 ;;; init-minibuffer.el --- Config for minibuffer completion -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 (use-package vertico
   :ensure t
   :hook ((after-init . vertico-mode)

@@ -1,5 +1,10 @@
 ;;; init-macros.el --- core macros  -*- lexical-binding: t -*-
 
+;;; Commentary:
+;;
+
+;;; Code:
+
 (defmacro set-company-backends-for! (mode &rest backends)
   "Set `company-backends' for MODE with BACKENDS."
   `(add-hook (intern (format "%s-hook" ',mode))
