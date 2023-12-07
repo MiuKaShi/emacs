@@ -17,9 +17,10 @@
   ;; Hide the thin width char glyph. This is dramatic but lets me not be annoyed
   (add-hook 'org-agenda-mode-hook
             #'(lambda () (setq-local nobreak-char-display nil)))
-  (org-super-agenda-mode))
+  (org-super-agenda-mode)
+)
 
- (use-package org-superstar
+(use-package org-superstar
   :ensure t
   :config
   (setq org-superstar-leading-bullet " ")
@@ -34,38 +35,40 @@
                                           ("CONTACT" . 9744)
                                           ("DONE" . 9745)))
   ;; :hook (org-mode . org-superstar-mode)
-  )
+)
 ;; Removes gap when you add a new heading
 (setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
 
 (use-package org-modern
- :ensure t
- :hook (org-mode . org-modern-mode)
- :config
-  (setq org-modern-label-border 1)
-  ;; 标题行型号字符
-  (setq org-modern-star ["◉" "○" "✸" "✳" "◈" "◇" "✿" "❀" "✜"])
-  ;; 列表符号美化
-  (setq org-modern-list
-        '((?- . "•")
-          (?+ . "◦")
-          (?* . "▹")))
-  (setq org-modern-tag nil)
-  (setq org-modern-priority nil)
-  (setq org-modern-todo nil)
-  (setq org-modern-progress nil)
-  ; (setq org-modern-timestamp nil)
-  (setq org-modern-table nil))
+	:ensure t
+	:hook (org-mode . org-modern-mode)
+	:config
+ 	(setq org-modern-label-border 1)
+ 	;; 标题行型号字符
+ 	(setq org-modern-star ["◉" "○" "✸" "✳" "◈" "◇" "✿" "❀" "✜"])
+ 	;; 列表符号美化
+ 	(setq org-modern-list
+       	'((?- . "•")
+         	(?+ . "◦")
+         	(?* . "▹")))
+ 	(setq org-modern-tag nil)
+ 	(setq org-modern-priority nil)
+ 	(setq org-modern-todo nil)
+ 	(setq org-modern-progress nil)
+ 	; (setq org-modern-timestamp nil)
+ 	(setq org-modern-table nil)
+)
 
 
 (use-package evil-org
- :ensure t
- :diminish evil-org-mode
- :after org
- :config
- (add-hook 'org-mode-hook 'evil-org-mode)
- (add-hook 'evil-org-mode-hook
-           (lambda () (evil-org-set-key-theme))))
+	:ensure t
+	:diminish evil-org-mode
+	:after org
+	:config
+	(add-hook 'org-mode-hook 'evil-org-mode)
+	(add-hook 'evil-org-mode-hook
+         	 (lambda () (evil-org-set-key-theme)))
+)
 
 (require 'evil-org-agenda)
 (evil-org-agenda-set-keys)
@@ -73,29 +76,31 @@
 
 ;; sync with google calendar
 (use-package org-gcal
- :ensure t
- :defer t
- :config
- (setq org-gcal-down-days '20					;; Only fetch events 20 days into the future
-       org-gcal-up-days '10					;; Only fetch events 10 days into the past
-       org-gcal-recurring-events-mode 'top-level
-       org-gcal-remove-api-cancelled-events t) ;; No prompt when deleting removed events
+ 	:ensure t
+ 	:defer t
+ 	:config
+ 	(setq org-gcal-down-days '20					;; Only fetch events 20 days into the future
+      	org-gcal-up-days '10					;; Only fetch events 10 days into the past
+      	org-gcal-recurring-events-mode 'top-level
+      	org-gcal-remove-api-cancelled-events t) ;; No prompt when deleting removed events
 )
 
 (use-package org-appear
- :ensure t
- :commands (org-appear-mode)
- :hook (org-mode . org-appear-mode)
- :init
-  (setq org-hide-emphasis-markers t)		;; A default setting that needs to be t for org-appear
-  (setq org-appear-autoemphasis t)		;; Enable org-appear on emphasis (bold, italics, etc)
-  (setq org-appear-autolinks nil)		;; Don't enable on links
-  (setq org-appear-autosubmarkers t))	;; Enable on subscript and superscript
+	:ensure t
+	:commands (org-appear-mode)
+	:hook (org-mode . org-appear-mode)
+	:init
+ 	(setq org-hide-emphasis-markers t)		;; A default setting that needs to be t for org-appear
+ 	(setq org-appear-autoemphasis t)		;; Enable org-appear on emphasis (bold, italics, etc)
+ 	(setq org-appear-autolinks nil)		;; Don't enable on links
+ 	(setq org-appear-autosubmarkers t);; Enable on subscript and superscript
+)
 
 
 (use-package ox-reveal
- :ensure t
- :defer 5)
+	:ensure t
+	:defer 5
+)
 
 (setq org-modules '(org-habit))
 
@@ -106,8 +111,8 @@
 	:ensure t
   :defer t
   :config
-  (setq org-preview-html-viewer 'xwidget))
-
+  (setq org-preview-html-viewer 'xwidget)
+)
 
 (use-package org-fragtog
 	:ensure t
@@ -116,53 +121,53 @@
   (setq org-latex-create-formula-image-program 'dvisvgm) ;; sharper
   (plist-put org-format-latex-options :scale 1.5) ;; bigger
   (setq org-latex-preview-ltxpng-directory (concat (temporary-file-directory) "ltxpng/"))
-  )
+)
 
 (use-package org-tree-slide
- :ensure t
- :defer t
- :config
- (setq org-tree-slide-slide-in-effect nil
-       org-tree-slide-skip-outline-level 3))
+ 	:ensure t
+ 	:defer t
+ 	:config
+ 	(setq org-tree-slide-slide-in-effect nil
+      	org-tree-slide-skip-outline-level 3)
+)
 
 (use-package org-download
- :ensure t
- :defer 2
- :config
- (setq org-download-method 'attach)
- (advice-add 'org-download-yank :before 'my/system-clipboard-to-emacs-clipboard))
+	:ensure t
+	:defer 2
+	:config
+	(setq org-download-method 'attach)
+	(advice-add 'org-download-yank :before 'my/system-clipboard-to-emacs-clipboard)
+)
 
-
-
-(use-package appt
-  :ensure nil
-  :hook ((after-init . (lambda () (appt-activate 1)))
-         (org-finalize-agenda . org-agenda-to-appt))
-  :config
-  ;; 通知提醒
-  (defun appt-display-with-notification (min-to-app new-time appt-msg)
-    (notify-send :title (format "Appointment in %s minutes" min-to-app)
-                 :body appt-msg
-                 :urgency 'critical)
-    (appt-disp-window min-to-app new-time appt-msg))
-
-  ;; 每15分钟更新一次appt
-  (run-at-time t 900 #'org-agenda-to-appt)
-
-  :custom
-  ;; 是否显示日记
-  (appt-display-diary nil)
-  ;; 提醒间隔时间，每15分钟提醒一次
-  (appt-display-interval 15)
-  ;; 模式栏显示提醒
-  (appt-display-mode-line t)
-  ;; 设置提醒响铃
-  (appt-audible t)
-  ;; 提前30分钟提醒
-  (appt-message-warning-time 30)
-  ;; 通知提醒函数
-  (appt-disp-window-function #'appt-display-with-notification)
-  )
+; (use-package appt
+;   :ensure nil
+;   :hook ((after-init . (lambda () (appt-activate 1)))
+;          (org-finalize-agenda . org-agenda-to-appt))
+;   :config
+;   ;; 通知提醒
+;   (defun appt-display-with-notification (min-to-app new-time appt-msg)
+;     (notify-send :title (format "Appointment in %s minutes" min-to-app)
+;                  :body appt-msg
+;                  :urgency 'critical)
+;     (appt-disp-window min-to-app new-time appt-msg))
+;
+;   ;; 每15分钟更新一次appt
+;   (run-at-time t 900 #'org-agenda-to-appt)
+;
+;   :custom
+;   ;; 是否显示日记
+;   (appt-display-diary nil)
+;   ;; 提醒间隔时间，每15分钟提醒一次
+;   (appt-display-interval 15)
+;   ;; 模式栏显示提醒
+;   (appt-display-mode-line t)
+;   ;; 设置提醒响铃
+;   (appt-audible t)
+;   ;; 提前30分钟提醒
+;   (appt-message-warning-time 30)
+;   ;; 通知提醒函数
+;   (appt-disp-window-function #'appt-display-with-notification)
+; )
 
 
 (use-package org
@@ -189,17 +194,15 @@
   ;; ⤵ ▼ ⬎  
   (setq org-highlight-latex-and-related '(native)) ;; 高亮inline latex语法
   (setq org-startup-folded 'showeverything)
-
   ;; 标题行美化
   (setq org-fontify-whole-heading-line t)
   (setq org-pretty-entities t)
   ;; 自动显示图片
   (setq org-startup-with-inline-images t)
   (setq org-image-actual-width 300)
-
   (setq org-cycle-separator-lines 1)
   (setq org-catch-invisible-edits 'show-and-error) ;; 'smart
-  
+
   ;; M-Ret can split lines on items and tables but not headlines and not on anything else (unconfigured)
   (setq org-M-RET-may-split-line '((headline) (item . t) (table . t) (default)))
   ;; disable在活动区域内的所有标题栏执行某些命令
@@ -276,8 +279,8 @@
 
   (use-package gnuplot
 		:ensure t
-		:defer t)
-
+		:defer t
+	)
 	(use-package org-src
   	:ensure nil
   	:hook (org-babel-after-execute . org-redisplay-inline-images)
@@ -306,40 +309,31 @@
                               	(emacs-lisp . t)
                               	(eshell     . t)
                               	(python     . t)
-                              	(shell      . t))))
+                              	(shell      . t)))
+	)
 
 	;; 3-org-habit
 	(use-package org-habit
   	:ensure nil
   	:defer t
-  	:custom
-		(org-habit-preceding-days 6)
-    (org-habit-following-days 6)
-    (org-habit-show-habits-only-for-today nil)
-    (org-habit-today-glyph ?⍟ );;‖
-    (org-habit-completed-glyph ?✓)
-    (org-habit-graph-column 40)
-  	)
+  	:config
+		(setq org-habit-preceding-days 6
+      		org-habit-following-days 6
+      		org-habit-show-habits-only-for-today nil
+      		org-habit-today-glyph ?⍟ ;;‖
+      		org-habit-completed-glyph ?✓
+      		org-habit-graph-column 40)
+  )
 
 	;; 4-org-agenda
   ;; custom time stamp format. I don't use this.
 
 	(use-package org-agenda
   	:ensure nil
-  	:hook (org-agenda-finalize . org-agenda-to-appt)
   	:config
   	(setq org-time-stamp-custom-formats '("<%A, %B %d, %Y" . "<%m/%d/%y %a %I:%M %p>"))
   	(setq org-agenda-restore-windows-after-quit t)
   	(setq org-agenda-window-setup 'current-window)
-  	;; 设置需要被日程监控的org文件
-  	(setq org-agenda-files
-   	 (list (expand-file-name "tasks.org" org-directory)
-         	 (expand-file-name "diary.org" org-directory)
-         	 (expand-file-name "habits.org" org-directory)
-         	 (expand-file-name "mail.org" org-directory)
-         	 ))
-  	;; 设置org的日记文件
-  	(setq org-agenda-diary-file (expand-file-name "diary.org" org-directory))
   	;; 日记插入精确时间戳
   	(setq org-agenda-insert-diary-extract-time t)
   	;; 从星期一开始作为一周第一天
@@ -376,13 +370,12 @@
 
   	(add-hook 'org-agenda-mode-hook
             	#'(lambda () (hide-mode-line-mode)))
-		)
+	)
 
 
 	;; 5-org-capture
 	(use-package org-capture
   	:ensure nil
-  	:hook (org-capture-mode . org-capture-setup)
   	:config
   	(with-no-warnings
     	(defun org-capture-setup ()
@@ -390,7 +383,7 @@
   	:custom
   	(org-capture-use-agenda-date t)
   	(org-capture-templates-contexts nil)
-  	(org-capture-templates `(("t" "Tasks" entry (file+headline "tasks.org" "Reminders")
+  	(org-capture-templates `(("t" "Study" entry (file+headline "study.org" "Reminders")
                             	"* TODO %i%?"
                             	:empty-lines-after 1
                             	:prepend t)
@@ -412,7 +405,7 @@
                             	:empty-lines 1
                             	:jump-to-captured t)
                            	 ))
-		)
+	)
 
 
 	;; 6-org-exproting
@@ -470,7 +463,7 @@
   (setq org-attach-id-dir ".org-attach/"
         org-attach-use-inheritance t)
 
-  ) ;; This parenthesis ends the org use-package.
+) ;; This parenthesis ends the org use-package.
 
 
 (provide 'init-org)

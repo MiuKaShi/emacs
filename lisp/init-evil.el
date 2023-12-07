@@ -25,6 +25,14 @@
   :config
   ;; Silence line out of range error.
   (shut-up! #'evil-indent)
+  ;; ----- Setting cursor colors
+  (setq evil-emacs-state-cursor    '("#649bce" box))
+  (setq evil-normal-state-cursor   '("#d9a871" box))
+  (setq evil-operator-state-cursor '("#ebcb8b" hollow))
+  (setq evil-visual-state-cursor   '("#677691" box))
+  (setq evil-insert-state-cursor   '("#eb998b" (bar . 2)))
+  (setq evil-replace-state-cursor  '("#eb998b" hbar))
+  (setq evil-motion-state-cursor   '("#ad8beb" box))
   :custom
   ;; undo will never freeze my Emacs
   (evil-undo-system 'undo-redo)
@@ -41,17 +49,11 @@
   (evil-want-C-g-bindings t)
   (evil-want-abbrev-expand-on-insert-exit nil)
   (evil-symbol-word-search t)
-  ;; ----- Setting cursor colors
-  (setq evil-emacs-state-cursor    '("#649bce" box))
-  (setq evil-normal-state-cursor   '("#d9a871" box))
-  (setq evil-operator-state-cursor '("#ebcb8b" hollow))
-  (setq evil-visual-state-cursor   '("#677691" box))
-  (setq evil-insert-state-cursor   '("#eb998b" (bar . 2)))
-  (setq evil-replace-state-cursor  '("#eb998b" hbar))
-  (setq evil-motion-state-cursor   '("#ad8beb" box)))
+)
 
 (use-package evil-surround
   :ensure t
+  :defer 2
   :hook (after-init . global-evil-surround-mode))
 
 (use-package evil-collection

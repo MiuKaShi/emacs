@@ -116,11 +116,9 @@
 ;; 有输入时禁止 `fontification' 相关的函数钩子，能让滚动更顺滑
 (setq redisplay-skip-fontification-on-input t)
 
-;; 禁止响铃
-(setq ring-bell-function 'ignore)
-
-;; 禁止闪烁光标
-(setq blink-cursor-mode nil)
+;; BELL/WARNING ------------
+(setq ring-bell-function 'ignore) ;; 禁止响铃
+(setq blink-cursor-mode nil) ;; 禁止闪烁光标
 
 ;; 鼠标滚动设置
 (setq scroll-step 2)
@@ -142,6 +140,8 @@
 ;; 行号显示
 (global-display-line-numbers-mode 1)
 (global-visual-line-mode t)
+;; Explicitly define a width to reduce the cost of on-the-fly computation
+(setq-default display-line-numbers-width 3)
 
 ;; Font size
 (set-face-attribute 'default nil

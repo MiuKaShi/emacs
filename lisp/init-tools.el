@@ -9,6 +9,7 @@
 (use-package which-key
   :ensure t
   :hook (after-init . which-key-mode)
+  :diminish which-key-mode
   :config
   (which-key-add-key-based-replacements
     "C-c !" "flycheck"
@@ -19,15 +20,11 @@
     "C-x n" "narrow"
     "C-x t" "tab")
   :custom
-	(which-key-idle-delay 0.8)
-	(which-key-add-column-padding 1)
-	(which-key-sort-uppercase-first nil)
+	(which-key-idle-delay 0.3)
+	(which-key-sort-order 'which-key-key-order-alpha)
 	(which-key-max-display-columns nil)
-	(which-key-min-display-lines 6)
-	(which-key-side-window-slot -10)
-	(which-key-side-window-max-height 0.25)
-	(which-key-max-description-length 25)
-	(which-key-separator " → " ))
+	(which-key-min-display-lines 3)
+	(which-key-separator "◉ " ))
 
 
 (use-package hl-prog-extra

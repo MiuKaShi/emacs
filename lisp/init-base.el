@@ -5,7 +5,12 @@
 
 ;;; Code:
 
-;; Pixelwise resize
+;; initial setting
+(setq initial-major-mode 'org-mode ;; Major mode of new buffers
+      initial-scratch-message ""
+      initial-buffer-choice t) ;; Blank scratch buffer
+
+;; WINDOW -----------
 (setq window-resize-pixelwise t
       frame-resize-pixelwise t)
 
@@ -21,7 +26,6 @@
 ;; No backup files
 (setq make-backup-files nil
       auto-save-default nil)
-
 ;; No lock files
 (setq create-lockfiles nil)
 
@@ -31,9 +35,6 @@
 ;; The nano style for truncated long lines.
 (setq auto-hscroll-mode 'current-line)
 
-;关闭启动空白buffer, 这个buffer会干扰session恢复
-(setq initial-scratch-message "")
-
 ;; 在光标处而非鼠标所在位置粘贴
 (setq mouse-yank-at-point t)
 
@@ -42,6 +43,9 @@
 ;; 禁止使用双向括号算法
 ;; (setq bidi-inhibit-bpa t)
 
+;; TAB键设置，在Emacs里不使用TAB键，所有的TAB默认为4个空格
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
 ;; 设置自动折行宽度为80个字符，默认值为70
 (setq-default fill-column 80)
 
@@ -51,10 +55,6 @@
 ;; 拷贝粘贴设置
 (setq select-enable-primary nil)        ; 选择文字时不拷贝
 (setq select-enable-clipboard t)        ; 拷贝时使用剪贴板
-
-;; TAB键设置，在Emacs里不使用TAB键，所有的TAB默认为4个空格
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
 
 ;; 设置剪贴板历史长度300，默认为60
 (setq kill-ring-max 200)
@@ -66,7 +66,6 @@
 (add-hook 'after-change-major-mode-hook
           (lambda ()
             (modify-syntax-entry ?_ "w")))
-
 
 ;; Sane defaults
 (setq use-short-answers t)
@@ -405,17 +404,16 @@ Else, call `comment-or-uncomment-region' on the current line."
 ;; Recently opened files
 (use-package recentf
   :ensure nil
-  :hook (after-init . recentf-mode)
-  :custom
-  (recentf-max-saved-items 200)
-  (recentf-auto-cleanup 'never)
-  (recentf-exclude '(
-                     "^/tmp/"
-                     "/ssh\\(x\\)?:"
-                     "/su\\(do\\)?:"
-                     "^/usr/include/"
-                     "/TAGS\\'"
-                     "COMMIT_EDITMSG\\'")))
+  :config
+  (setq ;;recentf-auto-cleanup 'never
+   ;; recentf-max-menu-items 0
+   recentf-max-saved-items 200)
+  (setq recentf-filename-handlers ;; Show home folder path as a ~
+        (append '(abbreviate-file-name) recentf-filename-handlers))
+)
+
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward)
 
 ;; Try out emacs package without installing
 (use-package try
@@ -423,7 +421,7 @@ Else, call `comment-or-uncomment-region' on the current line."
   :commands try try-and-refresh)
 
 
-;; 配置所有的编码为UTF-8，参考：
+;; ENCODING -------------
 (prefer-coding-system 'utf-8)
 (setenv "LANG" "en_US.UTF-8")
 (setenv "LC_ALL" "en_US.UTF-8")
