@@ -8,6 +8,13 @@
 (require 'init-funcs)
 (require 'init-macros)
 
+;; src block
+(require 'org-tempo)
+
+; Disable Electric Indent
+(electric-indent-mode -1)
+(setq org-edit-src-content-indentation 0)
+
 (use-package org-super-agenda
   :ensure t
   :after org
@@ -38,6 +45,8 @@
 )
 ;; Removes gap when you add a new heading
 (setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
+
+
 
 (use-package org-modern
 	:ensure t
@@ -383,23 +392,18 @@
   	:custom
   	(org-capture-use-agenda-date t)
   	(org-capture-templates-contexts nil)
-  	(org-capture-templates `(("t" "Study" entry (file+headline "study.org" "Reminders")
+  	(org-capture-templates `(("t" "Today's TODO list" entry (file+olp+datetree "diary.org")
+                            	"* Today's TODO list [/]\n%T\n\n** TODO %?"
+                            	:empty-lines 1
+                            	:jump-to-captured t)
+														 ("s" "Study" entry (file+headline "study.org" "Reminders")
                             	"* TODO %i%?"
                             	:empty-lines-after 1
                             	:prepend t)
                            	 ("n" "Notes" entry (file+headline "capture.org" "Notes")
                             	"* %? %^g\n%i\n"
                             	:empty-lines-after 1)
-                           	 ;; For EWW
-                           	 ("b" "Bookmarks" entry (file+headline "capture.org" "Bookmarks")
-                            	"* %:description\n\n%a%?"
-                            	:empty-lines 1
-                            	:immediate-finish t)
                            	 ("d" "Diary")
-                           	 ("dt" "Today's TODO list" entry (file+olp+datetree "diary.org")
-                            	"* Today's TODO list [/]\n%T\n\n** TODO %?"
-                            	:empty-lines 1
-                            	:jump-to-captured t)
                            	 ("do" "Other stuff" entry (file+olp+datetree "diary.org")
                             	"* %?\n%T\n\n%i"
                             	:empty-lines 1

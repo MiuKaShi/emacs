@@ -21,6 +21,8 @@
   :ensure t
   :hook (after-init . doom-modeline-mode)
   :custom
+  (doom-modeline-buffer-file-name-style 'relative-from-project) ;; Just show file name (no path)
+  (doom-modeline-height 35)
   (doom-modeline-irc nil)
   (doom-modeline-mu4e nil)
   (doom-modeline-gnus nil)
@@ -83,6 +85,10 @@
   :ensure t
   :when (display-graphic-p)
   :demand t)
+
+(use-package rainbow-mode
+  :ensure t
+  :hook org-mode prog-mode)
 
 (use-package dashboard
   :ensure t

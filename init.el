@@ -6,7 +6,7 @@
 ;;; Code:
 
 ;; `lsp-mode' benefits from that.
-(setq read-process-output-max (* 4 1024 1024))
+(setq gc-cons-threshold (* 256 1024 1024)) ; 256 MiB default before gc
 
 (require 'package)
 (setq package-archives
@@ -76,3 +76,6 @@
   (load custom-file))
 
 (provide 'init)
+
+;;; init.el ends here
+

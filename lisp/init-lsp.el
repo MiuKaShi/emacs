@@ -81,6 +81,7 @@
   (lsp-keep-workspace-alive nil)            ;; auto kill lsp server
   (lsp-eldoc-enable-hover nil))             ;; disable eldoc hover
 
+
 (use-package eglot
   :disabled
   :hook (prog-mode . eglot-ensure)
