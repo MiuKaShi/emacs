@@ -175,18 +175,18 @@
 (add-to-list 'default-frame-alist '(alpha-background . 85))
 
 ; transparency
-; (set-face-attribute 'highlight nil :foreground 'unspecified)
-; (if window-system (progn
-;   (set-background-color "Black")
-;   (set-foreground-color "LightGray")
-;   (set-cursor-color "Gray")
-;   (set-frame-parameter nil 'alpha 75))) ; 透明度
-; (defun set-transparency ()
-;   "set frame transparency"
-;   (set-frame-parameter nil 'alpha 75))  ; 透明度
-; (defun set-alpha (alpha-num)
-;   "set frame parameter 'alpha"
-;   (interactive "nAlpha: ")
-;   (set-frame-parameter nil 'alpha (cons alpha-num '(75))))
+(set-face-attribute 'highlight nil :foreground 'unspecified)
+(if window-system (progn
+  (set-background-color "Black")
+  (set-foreground-color "LightGray")
+  (set-cursor-color "Gray")
+  (set-frame-parameter nil 'alpha 75))) ; 透明度
+(defun set-transparency ()
+  "set frame transparency"
+  (set-frame-parameter nil 'alpha 75))  ; 透明度
+(defun set-alpha (alpha-num)
+  "set frame parameter 'alpha"
+  (interactive "nAlpha: ")
+  (set-frame-parameter nil 'alpha (cons alpha-num '(75))))
 
 (provide 'init-ui)

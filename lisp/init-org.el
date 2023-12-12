@@ -202,7 +202,7 @@
   (setq org-ellipsis " ▼") ;; 设置标题行折叠符号
   ;; ⤵ ▼ ⬎  
   (setq org-highlight-latex-and-related '(native)) ;; 高亮inline latex语法
-  (setq org-startup-folded 'showeverything)
+  ; (setq org-startup-folded 'showeverything)
   ;; 标题行美化
   (setq org-fontify-whole-heading-line t)
   (setq org-pretty-entities t)
@@ -394,7 +394,6 @@
   	(org-capture-templates-contexts nil)
   	(org-capture-templates `(("t" "Today's TODO list" entry (file+olp+datetree "diary.org")
                             	"* Today's TODO list [/]\n%T\n\n** TODO %?"
-                            	:empty-lines 1
                             	:jump-to-captured t)
 														 ("s" "Study" entry (file+headline "study.org" "Reminders")
                             	"* TODO %i%?"

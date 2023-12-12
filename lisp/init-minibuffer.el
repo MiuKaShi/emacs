@@ -12,6 +12,33 @@
   :custom
   (vertico-sort-function nil))
 
+(use-package orderless
+  :ensure t
+  :demand t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles basic substring))
+                                   (project-file (styles basic substring))))
+  (orderless-matching-styles '(orderless-literal
+                               orderless-regexp
+                               ;; Prefixes: "re-re" ~ "recode-region",
+                               ;;                     "query-replace-regex"
+                               ;; orderless-prefixes
+                               ;;
+                               ;; Initialisms: "abc" ~ "alfred-batman-catwoman"
+                               ;; NOTE: Initialism regexps are really slow under
+                               ;;       the hood. You probably don't want them
+                               ;; orderless-initialism
+                               ;;
+                               ;; Flex:
+                               ;; characters in the search string must appear in the candidate
+                               ;; string, but not necessarily consecutively,  i.e, "abc" really
+                               ;; means "a.*b.*c", so it would match "anybody can."
+                               ;; orderless-flex
+                               )))
+
+
 (use-package embark
   :ensure t
   :bind (:map minibuffer-local-map
