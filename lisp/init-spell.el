@@ -33,6 +33,7 @@
 ;; Spell check on-the-fly
 (use-package flyspell
   :ensure nil
+  :commands flyspell-mode
   :config
   (add-to-list 'ispell-skip-region-alist '("~" "~"))
   (add-to-list 'ispell-skip-region-alist '("=" "="))
@@ -48,6 +49,9 @@
 
   (setq flyspell-issue-welcome-flag nil
 				flyspell-use-meta-tab t
+				ispell-program-name "aspell"
+        ispell-extra-args '("--sug-mode=ultra"
+                            "--run-together")
         flyspell-issue-message-flag nil))
 
 (provide 'init-spell)

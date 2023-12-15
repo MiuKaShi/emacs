@@ -11,6 +11,7 @@
   :bind (:map dired-mode-map
          ;; consistent with ivy
          ("C-c C-e"   . wdired-change-to-wdired-mode))
+  :commands (dired dired-jump dired-jump-other-window)
   :custom
   (dired-dwim-target t)
   (dired-bind-vm nil)

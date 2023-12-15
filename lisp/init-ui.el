@@ -88,6 +88,7 @@
 
 (use-package rainbow-mode
   :ensure t
+  :commands (rainbow-mode)
   :hook org-mode prog-mode)
 
 (use-package dashboard

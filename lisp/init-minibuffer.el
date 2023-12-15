@@ -86,6 +86,10 @@
 
 (use-package marginalia
   :ensure t
-  :hook (after-init . marginalia-mode))
+  :init
+  (marginalia-mode)
+  (setq marginalia-annotators
+        '(marginalia-annotators-heavy marginalia-annotators-light)))
+
 
 (provide 'init-minibuffer)

@@ -16,6 +16,7 @@
 (setq org-edit-src-content-indentation 0)
 
 (use-package org-super-agenda
+  :defer
   :ensure t
   :after org
   :config
@@ -24,7 +25,32 @@
   ;; Hide the thin width char glyph. This is dramatic but lets me not be annoyed
   (add-hook 'org-agenda-mode-hook
             #'(lambda () (setq-local nobreak-char-display nil)))
-  (org-super-agenda-mode)
+
+  (org-super-agenda-mode t)
+  (add-to-list 'org-agenda-custom-commands
+               '("rag" "Grouped Tasks"
+                 ((todo "" ((org-super-agenda-groups
+                             '((:name "All Tasks" :auto-category t))))))))
+  (add-to-list 'org-agenda-custom-commands
+               '("f1" "Score 1 Tasks"
+                 ((tags "+Score=1" ((org-super-agenda-groups
+                                     '((:name "Score 1 Tasks" :auto-category t))))))))
+  (add-to-list 'org-agenda-custom-commands
+               '("f2" "Score 2 Tasks"
+                 ((tags "+Score=2" ((org-super-agenda-groups
+                                     '((:name "Score 1 Tasks" :auto-category t))))))))
+  (add-to-list 'org-agenda-custom-commands
+               '("f3" "Score 3 Tasks"
+                 ((tags "+Score=3" ((org-super-agenda-groups
+                                     '((:name "Score 1 Tasks" :auto-category t))))))))
+  (add-to-list 'org-agenda-custom-commands
+               '("f5" "Score 5 Tasks"
+                 ((tags "+Score=5" ((org-super-agenda-groups
+                                     '((:name "Score 1 Tasks" :auto-category t))))))))
+  (add-to-list 'org-agenda-custom-commands
+               '("f8" "Score 8 Tasks"
+                 ((tags "+Score=8" ((org-super-agenda-groups
+                                     '((:name "Score 1 Tasks" :auto-category t))))))))
 )
 
 (use-package org-superstar
@@ -33,20 +59,18 @@
   (setq org-superstar-leading-bullet " ")
   (setq org-superstar-special-todo-items t) ;; Makes TODO header bullets into boxes
   (setq org-superstar-todo-bullet-alist '(("TODO" . 9744)
+                                          ("NEXT" . 9744)
                                           ("INPROG" . 9744)
-                                          ("WORK" . 9744)
-                                          ("STUDY" . 9744)
                                           ("SOMEDAY" . 9744)
-                                          ("READ" . 9744)
                                           ("CANCELLED" . 9744)
-                                          ("CONTACT" . 9744)
                                           ("DONE" . 9745)))
   ;; :hook (org-mode . org-superstar-mode)
 )
 ;; Removes gap when you add a new heading
 (setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
-
-
+;;  inserting a new heading, do so after the current subtree.
+(setq org-insert-heading-respect-content t)
+(setq org-adapt-indentation t)
 
 (use-package org-modern
 	:ensure t
@@ -54,7 +78,7 @@
 	:config
  	(setq org-modern-label-border 1)
  	;; 标题行型号字符
- 	(setq org-modern-star ["◉" "○" "✸" "✳" "◈" "◇" "✿" "❀" "✜"])
+ 	(setq org-modern-star ["◉" "◊" "○" "✿" "✸" "◈" "◇" "✿" "⧫" "✜"])
  	;; 列表符号美化
  	(setq org-modern-list
        	'((?- . "•")
@@ -66,6 +90,7 @@
  	(setq org-modern-progress nil)
  	; (setq org-modern-timestamp nil)
  	(setq org-modern-table nil)
+  (add-hook 'org-mode-hook #'valign-mode) ; valign 解决 org-modern 下org-mode 表格不对齐的问题
 )
 
 
@@ -221,16 +246,13 @@
   (setq org-link-frame-setup '((file . find-file)))
 
   (setq org-closed-keep-when-no-todo t)
-  ;; DONE时加上时间戳
-  (setq org-log-done 'time)
-  ;; 重复执行时加上时间戳
-  (setq org-log-repeat 'time)
-  ;; Deadline修改时加上一条记录
-  (setq org-log-redeadline 'note)
-  ;; Schedule修改时加上一条记录
-  (setq org-log-reschedule 'note)
-  ;; 以抽屉的方式记录
-  (setq org-log-into-drawer t)
+
+	(setq org-log-done (quote note)
+      	org-log-redeadline (quote time)
+      	org-log-reschedule (quote time)
+      	org-log-into-drawer t
+      	org-drawers '("PROPERTIES" "LOGBOOK" "CLOCK"))
+
   ;; 紧接着标题行或者计划/截止时间戳后加上记录抽屉
   (setq org-log-state-notes-insert-after-drawers nil)
 
@@ -257,35 +279,63 @@
   (advice-add 'org-agenda-switch-to :after #'my/post-org-goto)
   (setq org-tags-column -1)
 
+	;; Columns
+	(setq
+ 	 org-columns-default-format
+ 	 "%80ITEM(Task) %5Score{+} %10Effort(Effort){:} %10CLOCKSUM")
+
+	;; Sub-tasks
+	(setq org-enforce-todo-checkbox-dependencies t
+      	org-enforce-todo-dependencies t)
+
   ;; TOOD的关键词设置，可以设置不同的组
-  (setq org-todo-keywords '((sequence "TODO(t)" "WORK(w)" "STUDY(s)" "INPROG(i)" "HOLD(h)" "|" "DONE(d!)" "CANCELLED(c@)")
-					   (sequence "READ(r)" "SOMEDAY" "CONTACT(c)" "|" "FIXED(f)")))
+	(setq org-todo-keywords
+      	(quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
+              	(sequence "INPROG(i@/!)" "SOMEDAY(s!)" "|" "CANCELED(c@/!)")
+              	(sequence "CANCELED(c@/!)"))))
+
   ;; TODO关键词的样式设置
   (setq org-todo-keyword-faces '(
 							("TODO"       :inherit (region org-todo) :foreground "#50a14f" :weight bold)
-							("WORK"       :inherit (region org-todo) :foreground "#feb24c" :weight bold)
-							("STUDY"      :inherit (region org-todo) :foreground "#ff6480" :weight bold)
+							("NEXT"       :inherit (region org-todo) :foreground "#feb24c" :weight bold)
 							("INPROG"			:inherit (org-todo region) :foreground "#0098dd" :weight bold)
-							("HOLD"				:inherit (org-todo region) :foreground "#9f7efe"  :weight bold)
 							("DONE"       :foreground "#7c7c75" :weight bold)
-							("CANCELLED"  :foreground "red" :weight bold)
-							("READ"				:foreground "magenta" :weight bold)
-							("SOMEDAY"		:foreground "green" :weight bold)
-							("CONTACT"		:foreground "red" :weight bold)))
+							("SOMEDAY"		:foreground "#ff6480" :weight bold)
+							("CANCELLED"  :foreground "red" :weight bold)))
+
+  ;; tags的样式设置
+	(setq org-use-fast-todo-selection t)
+	(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+	(setq org-todo-state-tags-triggers
+      	(quote (("CANCELED"
+               	 ("CANCELED" . t))
+              	("INPROG"
+               	 ("INPROG" . t))
+              	("SOMEDAY"
+               	 ("SOMEDAY" . t))
+              	(done
+               	 ("INPROG"))
+              	("TODO"
+               	 ("INPROG")
+               	 ("CANCELED"))
+              	("NEXT"
+               	 ("INPROG"))
+              	("DONE"
+               	 ("INPROG")
+               	 ("CANCELED")))))
+
+ 	;; priorities off.
+	(setq org-enable-priority-commands nil)
 
 
-  (setq org-lowest-priority ?F)  ;; Gives us priorities A through F
-  (setq org-default-priority ?E) ;; If an item has no priority, it is considered [#E].
-  (setq org-priority-faces
-        '((65 . "red2")
-          (66 . "Gold1")
-          (67 . "Goldenrod2")
-          (68 . "PaleTurquoise3")
-          (69 . "DarkSlateGray4")
-          (70 . "PaleTurquoise4")))
+  ;; 2-refile
+	(setq org-refile-use-cache t
+      	org-refile-targets '((org-agenda-files :maxlevel . 2)
+                           	 (nil :maxlevel . 5))
+      	org-refile-allow-creating-parent-nodes 'confirm
+      	org-refile-use-outline-path 'file)
 
   ;; 2-Org-src
-
   (use-package gnuplot
 		:ensure t
 		:defer t
@@ -358,27 +408,245 @@
   	(setq org-agenda-skip-deadline-prewarning-if-scheduled t)
   	;; use AM-PM and not 24-hour time
   	(setq org-agenda-timegrid-use-ampm t)
+		(setq org-agenda-time-grid nil)
 
-  	(setq org-agenda-time-grid nil)
+		;; basic settings
+		(setq org-agenda-show-inherited-tags t
+      		org-agenda-log-mode-items '(clock)
+      		org-agenda-clockreport-parameter-plist '(:link nil :maxlevel 2 :fileskip0 t)
+      		;;org-agenda-block-separator ?┄
+      		org-agenda-block-separator nil
+      		org-agenda-dim-blocked-tasks nil
+      		org-agenda-inhibit-startup t
+      		org-agenda-breadcrumbs-separator " ❱ ")
 
-  	;; (setq org-agenda-span 'day)
 
-  	(setq org-agenda-block-separator ?-)
 
 		;;;;; more true to defaults
 
-  	(setq org-agenda-prefix-format '((agenda . " %-12:T%?-12t% s")
-                                   	 (todo . " %i %-12:c")
-                                   	 (tags . " %i %-12:c")
-                                   	 (search . " %i %-12:c")))
+  	; (setq org-agenda-prefix-format '((agenda . " %-12:T%?-12t% s")
+  	;                                 	 (todo . " %i %-12:c")
+  	;                                 	 (tags . " %i %-12:c")
+  	;                                 	 (search . " %i %-12:c")))
+  	;
+  	; (setq org-agenda-deadline-leaders '("Deadline:  " "In %2d d.: " "%2d d. ago: "))
+  	;
+  	; (add-hook 'org-agenda-mode-hook
+  	;          	#'(lambda () (setq-local line-spacing 3)))
+  	;
+  	; (add-hook 'org-agenda-mode-hook
+  	;          	#'(lambda () (hide-mode-line-mode)))
 
-  	(setq org-agenda-deadline-leaders '("Deadline:  " "In %2d d.: " "%2d d. ago: "))
+		(setq org-agenda-custom-commands nil)
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("o" "My Agenda"
+               	 	 ((todo "TODO" (
+                              		(org-agenda-overriding-header "\n⚡ Do Today\n┄┄┄┄┄┄┄┄┄┄")
+                              		(org-agenda-remove-tags t)
+                              		(org-agenda-prefix-format " %-2i %-15b")
+                              		(org-agenda-todo-keyword-format "")
+                              		))
+                		(agenda "" (
+                            		(org-agenda-start-day "+0d")
+                            		(org-agenda-span 5)
+                            		(org-agenda-overriding-header "⚡ Schedule\n┄┄┄┄┄┄┄┄┄┄")
+                            		(org-agenda-repeating-timestamp-show-all nil)
+                            		(org-agenda-remove-tags t)
+                            		(org-agenda-prefix-format   "  %-3i  %-15b %t%s")
+                            		(org-agenda-todo-keyword-format " ☐ ")
+                            		(org-agenda-current-time-string "⮜┈┈┈┈┈┈┈ now")
+                            		(org-agenda-scheduled-leaders '("" ""))
+                            		(org-agenda-time-grid (quote ((daily today remove-match)
+                                                          		(0900 1200 1500 1800 2100)
+                                                          		"      " "┈┈┈┈┈┈┈┈┈┈┈┈┈")))
+                            		))
+                		))
+		)
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("b" "Agenda" my/org-agenda-with-tip))
 
-  	(add-hook 'org-agenda-mode-hook
-            	#'(lambda () (setq-local line-spacing 3)))
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("c" . "COLLECT...") t)
 
-  	(add-hook 'org-agenda-mode-hook
-            	#'(lambda () (hide-mode-line-mode)))
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("cb" "CollectBox"
+               	 	 ((alltodo ""))))
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("f" . "FOCUS...") t)
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 `("f." "Today"
+               	 	 ((agenda ""
+                        		((org-agenda-entry-types '(:timestamp :sexp))
+                         	 	 (org-agenda-overriding-header
+                          		(concat "CALENDAR Today"
+                                  		(format-time-string "%a %d" (current-time))))
+                         	 	 (org-agenda-span 'day)))
+                		(tags-todo "LEVEL=1"
+                           	 	 ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")))
+                		(tags-todo "DEADLINE=\"<+0d>\""
+                           	 	 ((org-agenda-overriding-header "DUE TODAY")
+                            		(org-agenda-skip-function
+                             	 	 '(org-agenda-skip-entry-if 'notedeadline))
+                            		(org-agenda-sorting-strategy '(priority-down))))
+                		(tags-todo "DEADLINE<\"<+0d>\""
+                           	 	 ((org-agenda-overriding-header "OVERDUE")
+                            		(org-agenda-skip-function
+                             	 	 '(org-agenda-skip-entry-if 'notedeadline))
+                            		(org-agenda-sorting-strategy '(priority-down))))
+                		(agenda ""
+                        		((org-agenda-entry-types '(:scheduled))
+                         	 	 (org-agenda-overriding-header "SCHEDULED")
+                         	 	 (org-agenda-skip-function
+                          		'(org-agenda-skip-entry-if 'todo 'done))
+                         	 	 (org-agenda-sorting-strategy
+                          		'(priority-down time-down))
+                         	 	 (org-agenda-span 'day)
+                         	 	 (org-agenda-start-on-weekday nil)
+                         	 	 (org-agenda-time-grid nil)))
+                		(todo "DONE"
+                      		((org-agenda-overriding-header "COMPLETED"))))
+               	 	 ((org-agenda-format-date "")
+                		(org-agenda-start-with-clockreport-mode nil))) t)
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("fh" "Hotlist"
+               	 	 ((tags-todo "DEADLINE<\"<+0d>\""
+                           	 	 ((org-agenda-overriding-header "OVERDUE")))
+                		(tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
+                           	 	 ((org-agenda-overriding-header "DUE IN NEXT 7 DAYS")))
+                		(tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                           	 	 ((org-agenda-overriding-header "FLAGGED"))))
+               	 	 ((org-agenda-todo-ignore-scheduled 'future)))  t)
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("r" . "REVIEW...") t)
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("ra" . "All Tasks...") t)
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("rad" "All Tasks (grouped by Due Date)"
+               	 	 ((tags-todo "DEADLINE<\"<+0d>\""
+                           	 	 ((org-agenda-overriding-header "OVERDUE")
+                            		(org-agenda-skip-function
+                             	 	 '(org-agenda-skip-entry-if 'notdeadline))))
+                		(tags-todo "DEADLINE=\"<+0d>\""
+                           	 	 ((org-agenda-overriding-header "DUE TODAY")
+                            		(org-agenda-skip-function
+                             	 	 '(org-agenda-skip-entry-if 'notdeadline))))
+                		(tags-todo "DEADLINE=\"<+1d>\""
+                           	 	 ((org-agenda-overriding-header "DUE TOMORROW")
+                            		(org-agenda-skip-function
+                             	 	 '(org-agenda-skip-entry-if 'notdeadline))))
+                		(tags-todo "DEADLINE>\"<+1d>\"+DEADLINE<=\"<+7d>\""
+                           	 	 ((org-agenda-overriding-header "DUE WITHIN A WEEK")
+                            		(org-agenda-skip-function
+                             	 	 '(org-agenda-skip-entry-if 'notdeadline))))
+                		(tags-todo "DEADLINE>\"<+7d>\"+DEADLINE<=\"<+28d>\""
+                           	 	 ((org-agenda-overriding-header "DUE WITHIN A MONTH")
+                            		(org-agenda-skip-function
+                             	 	 '(org-agenda-skip-entry-if 'notdeadline))))
+                		(tags-todo "DEADLINE>\"<+28d>\""
+                           	 	 ((org-agenda-overriding-header "DUE LATER")
+                            		(org-agenda-skip-function
+                             	 	 '(org-agenda-skip-entry-if 'notdeadline))))
+                		(tags-todo "TODO={WAIT}"
+                           	 	 ((org-agenda-overriding-header "WAITING FOR")
+                            		(org-agenda-skip-function
+                             	 	 '(org-agenda-skip-entry-if 'deadline))))
+                		(todo ""
+                      		((org-agenda-overriding-header "WAITING FOR")
+                       	 	 (org-agenda-skip-function
+                        		'(org-agenda-skip-entry-if 'deadline)))))
+               	 	 ((org-agenda-sorting-strategy '(priority-down))
+                		(org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
+               	 	 "~/Org/all-tasks-by-due-date.pdf") t)
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("ra1" "All Tasks with a due date"
+               	 	 ((alltodo ""))
+               	 	 ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
+                		(org-agenda-skip-function
+                 	 	 '(org-agenda-skip-entry-if 'notdeadline))
+                		(org-agenda-sorting-strategy '(deadline-up)))) t)
+
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("rag" "Grouped Tasks")
+             	 	 ())
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("rt" . "Timesheet...") t)
+
+		;; Show what happened today.
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("rtd" "Daily Timesheet"
+               	 	 ((agenda ""))
+               	 	 ((org-agenda-log-mode-items '(clock closed))
+                		(org-agenda-overriding-header "DAILY TIMESHEET")
+                		(org-agenda-show-log 'clockcheck)
+                		(org-agenda-span 'day)
+                		(org-agenda-start-with-clockreport-mode t)
+                		(org-agenda-time-grid nil))) t)
+
+		;; Show what happened this week.
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("rtw" "Weekly Timesheet"
+               	 	 ((agenda ""))
+               	 	 (
+                		;; (org-agenda-format-date "")
+                		(org-agenda-overriding-header "WEEKLY TIMESHEET")
+                		(org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
+                		(org-agenda-span 'week)
+                		(org-agenda-start-on-weekday 1)
+                		(org-agenda-start-with-clockreport-mode t)
+                		(org-agenda-time-grid nil))) t)
+
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("rc" . "Calendar...") t)
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("rc7" "Events and appointments for 7 days"
+               	 	 ((agenda ""))
+               	 	 ((org-agenda-entry-types '(:timestamp :sexp))
+                		;; (org-agenda-overriding-header "Calendar for 7 days")
+                		(org-agenda-span 'week)
+                		(org-agenda-format-date "\n%a %d")
+                		;; (org-agenda-date-weekend ... new face ...)
+                		(org-agenda-time-grid nil))) t)
+
+		(add-to-list 'org-agenda-custom-commands
+             	 	 '("rw" "Weekly review"
+               	 	 ((tags "CATEGORY={@REFILE}&LEVEL<=2"
+                      		((org-agenda-overriding-header "NEW TASKS")))
+                		(agenda ""
+                        		((org-agenda-clockreport-mode t)
+                         	 	 (org-agenda-format-date
+                          		(concat "\n"
+                                  		"%Y-%m-%d" " %a "
+                                  		(make-string (window-width) ?_)))
+                         	 	 (org-agenda-overriding-header "PAST WEEK")
+                         	 	 (org-agenda-prefix-format " %?-11t %i %-12:c% s")
+                         	 	 (org-agenda-show-log 'clockcheck)
+                         	 	 (org-agenda-span 7)
+                         	 	 (org-agenda-start-day "-1w")
+                         	 	 (org-deadline-warning-days 0)))
+                		(agenda ""
+                        		((org-agenda-overriding-header "NEXT MONTH")
+                         	 	 (org-agenda-span 'month)
+                         	 	 (org-agenda-start-day "+0d")
+                         	 	 (org-deadline-warning-days 0)))
+                		(todo "PROJECT"
+                      		((org-agenda-overriding-header "PROJECT LIST")))
+                		(todo "DONE|PROJECTDONE"
+                      		((org-agenda-overriding-header
+                        		"Candidates to be archived"))))))
+
+		;; This hook runs first in the agenda (and before it is set to read-only)
+		(add-hook 'org-agenda-mode-hook 'my/agenda-score-goal)
 	)
 
 
@@ -392,22 +660,19 @@
   	:custom
   	(org-capture-use-agenda-date t)
   	(org-capture-templates-contexts nil)
-  	(org-capture-templates `(("t" "Today's TODO list" entry (file+olp+datetree "diary.org")
-                            	"* Today's TODO list [/]\n%T\n\n** TODO %?"
-                            	:jump-to-captured t)
-														 ("s" "Study" entry (file+headline "study.org" "Reminders")
-                            	"* TODO %i%?"
-                            	:empty-lines-after 1
-                            	:prepend t)
-                           	 ("n" "Notes" entry (file+headline "capture.org" "Notes")
-                            	"* %? %^g\n%i\n"
-                            	:empty-lines-after 1)
-                           	 ("d" "Diary")
-                           	 ("do" "Other stuff" entry (file+olp+datetree "diary.org")
-                            	"* %?\n%T\n\n%i"
-                            	:empty-lines 1
-                            	:jump-to-captured t)
-                           	 ))
+		(org-capture-templates
+      		'(("t" "Todo" entry
+         	 	 (file "~/Org/inbox.org")
+         	 	 "* TODO %?\n  %U\n%^{Score}p" :clock-in t :clock-resume t)
+  	        ("n" "Note" entry
+						(file+headline "~/Org/capture.org" "Notes")
+         	 	 "* %?          :NOTE:\n  %U\n  %a\n  :CLOCK:\n  :END:")
+        		("c" "Capture current TODO mix in table" table-line (file+headline "~/Org/WeeklyReports.org" "Burndown")
+         	 	 "%(my/org-count-tasks-by-status)")
+        		("s" "Capture Weekly Score in table" table-line (file+headline "~/Org/WeeklyReports.org" "Scores")
+         	 	 "%(my/add-weekly-score-table-entry)")
+        		("e" "Capture Weekly time in table" table-line (file+headline "~/Org/WeeklyReports.org" "Minutes")
+         	 	 "%(my/org-time-logged-table-entry)")))
 	)
 
 
@@ -465,6 +730,19 @@
 
   (setq org-attach-id-dir ".org-attach/"
         org-attach-use-inheritance t)
+
+	(setq org-modules
+      	'(org-bbdb
+        	org-bibtex
+        	org-info
+        	org-habit
+        	org-calc))
+
+	(setq org-habit-graph-column 50)
+	(setq org-global-properties
+      	'(("STYLE_ALL"  . "habit")
+        	("Effort_ALL" . "0:10 0:30 1:00 2:00 3:00 4:00")
+        	("Score_ALL"  . "1 2 3 5 8")))
 
 ) ;; This parenthesis ends the org use-package.
 

@@ -16,7 +16,9 @@
   :init
   (advice-add #'markdown--command-map-prompt :override #'ignore)
   (advice-add #'markdown--style-map-prompt   :override #'ignore)
-  :mode ("README\\(?:\\.md\\)?\\'" . gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
   :hook (markdown-mode . visual-line-mode)
   :bind (:map markdown-mode-style-map
          ("r" . markdown-insert-ruby-tag)

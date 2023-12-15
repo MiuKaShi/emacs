@@ -82,6 +82,15 @@
   (lsp-eldoc-enable-hover nil))             ;; disable eldoc hover
 
 
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-peek-always-show t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-enable nil))
+
+
 (use-package eglot
   :disabled
   :hook (prog-mode . eglot-ensure)

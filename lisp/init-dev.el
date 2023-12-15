@@ -229,6 +229,12 @@
   (setq treesit-language-source-alist
         '((c . ("https://github.com/tree-sitter/tree-sitter-c"))
           (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+					(bash . ("https://github.com/tree-sitter/tree-sitter-bash"))
+        	(markdown . ("https://github.com/MDeiml/tree-sitter-markdown" nil "tree-sitter-markdown/src"))
+        	(org . ("https://github.com/milisims/tree-sitter-org"))
+        	(python . ("https://github.com/tree-sitter/tree-sitter-python"))
+        	(elisp . ("https://github.com/Wilfred/tree-sitter-elisp"))
+        	(lua . ("https://github.com/Azganoth/tree-sitter-lua"))
           (json . ("https://github.com/tree-sitter/tree-sitter-json")))))
 
 (require 'init-cpp)

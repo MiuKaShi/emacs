@@ -422,20 +422,19 @@ Else, call `comment-or-uncomment-region' on the current line."
 
 
 ;; ENCODING -------------
+(set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8)
 (setenv "LANG" "en_US.UTF-8")
 (setenv "LC_ALL" "en_US.UTF-8")
 (setenv "LC_CTYPE" "en_US.UTF-8")
-
-;; Set UTF-8 as the default coding system
 (set-charset-priority 'unicode)
 (set-default-coding-systems 'utf-8)
-(set-selection-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
 (set-clipboard-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
 (setq locale-coding-system 'utf-8)
 
 (provide 'init-base)

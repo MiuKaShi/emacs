@@ -124,6 +124,12 @@ if LOCALLEADER is nil, otherwise \"<localleader>\"."
 			;; Find-file
       "." 'find-file
 
+			;; spell check
+      "i" 'flyspell-mode
+
+			;; neotree
+      "l" 'neotree-toggle
+
 			;; file
       "f"  '(:wk "files")
       "fF" 'find-file-other-window
