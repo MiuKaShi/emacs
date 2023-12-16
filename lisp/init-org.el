@@ -59,7 +59,7 @@
   (setq org-superstar-leading-bullet " ")
   (setq org-superstar-special-todo-items t) ;; Makes TODO header bullets into boxes
   (setq org-superstar-todo-bullet-alist '(("TODO" . 9744)
-                                          ("NEXT" . 9744)
+                                          ("WAITING" . 9744)
                                           ("INPROG" . 9744)
                                           ("SOMEDAY" . 9744)
                                           ("CANCELLED" . 9744)
@@ -78,7 +78,7 @@
 	:config
  	(setq org-modern-label-border 1)
  	;; 标题行型号字符
- 	(setq org-modern-star ["◉" "◊" "○" "✿" "✸" "◈" "◇" "✿" "⧫" "✜"])
+ 	(setq org-modern-star ["◉" "✸" "○" "✿" "◈" "◊" "⧫" "◇" "✜"])
  	;; 列表符号美化
  	(setq org-modern-list
        	'((?- . "•")
@@ -109,15 +109,15 @@
 
 
 ;; sync with google calendar
-(use-package org-gcal
- 	:ensure t
- 	:defer t
- 	:config
- 	(setq org-gcal-down-days '20					;; Only fetch events 20 days into the future
-      	org-gcal-up-days '10					;; Only fetch events 10 days into the past
-      	org-gcal-recurring-events-mode 'top-level
-      	org-gcal-remove-api-cancelled-events t) ;; No prompt when deleting removed events
-)
+; (use-package org-gcal
+;  	:ensure t
+;  	:defer t
+;  	:config
+;  	(setq org-gcal-down-days '20					;; Only fetch events 20 days into the future
+;       	org-gcal-up-days '10					;; Only fetch events 10 days into the past
+;       	org-gcal-recurring-events-mode 'top-level
+;       	org-gcal-remove-api-cancelled-events t) ;; No prompt when deleting removed events
+; )
 
 (use-package org-appear
 	:ensure t
@@ -290,14 +290,14 @@
 
   ;; TOOD的关键词设置，可以设置不同的组
 	(setq org-todo-keywords
-      	(quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
-              	(sequence "INPROG(i@/!)" "SOMEDAY(s!)" "|" "CANCELED(c@/!)")
+      	(quote ((sequence "TODO(t)" "INPROG(i)" "|" "DONE(d!/!)")
+              	(sequence "WAITING(w@/!)" "SOMEDAY(s!)" "|" "CANCELED(c@/!)")
               	(sequence "CANCELED(c@/!)"))))
 
   ;; TODO关键词的样式设置
   (setq org-todo-keyword-faces '(
 							("TODO"       :inherit (region org-todo) :foreground "#50a14f" :weight bold)
-							("NEXT"       :inherit (region org-todo) :foreground "#feb24c" :weight bold)
+							("WAITING"    :inherit (region org-todo) :foreground "#feb24c" :weight bold)
 							("INPROG"			:inherit (org-todo region) :foreground "#0098dd" :weight bold)
 							("DONE"       :foreground "#7c7c75" :weight bold)
 							("SOMEDAY"		:foreground "#ff6480" :weight bold)
@@ -309,24 +309,23 @@
 	(setq org-todo-state-tags-triggers
       	(quote (("CANCELED"
                	 ("CANCELED" . t))
-              	("INPROG"
-               	 ("INPROG" . t))
+                ("WAITING"
+                 ("WAITING" . t))
               	("SOMEDAY"
                	 ("SOMEDAY" . t))
-              	(done
-               	 ("INPROG"))
+                (done
+                 ("WAITING"))
               	("TODO"
-               	 ("INPROG")
+                 ("WAITING")
                	 ("CANCELED"))
-              	("NEXT"
-               	 ("INPROG"))
+                ("INPROG"
+                 ("WAITING"))
               	("DONE"
-               	 ("INPROG")
+                 ("WAITING")
                	 ("CANCELED")))))
 
  	;; priorities off.
 	(setq org-enable-priority-commands nil)
-
 
   ;; 2-refile
 	(setq org-refile-use-cache t
@@ -381,7 +380,7 @@
       		org-habit-show-habits-only-for-today nil
       		org-habit-today-glyph ?⍟ ;;‖
       		org-habit-completed-glyph ?✓
-      		org-habit-graph-column 40)
+      		org-habit-graph-column 50)
   )
 
 	;; 4-org-agenda
@@ -417,7 +416,7 @@
       		;;org-agenda-block-separator ?┄
       		org-agenda-block-separator nil
       		org-agenda-dim-blocked-tasks nil
-      		org-agenda-inhibit-startup t
+      		; org-agenda-inhibit-startup t
       		org-agenda-breadcrumbs-separator " ❱ ")
 
 
@@ -483,7 +482,7 @@
                           		(concat "CALENDAR Today"
                                   		(format-time-string "%a %d" (current-time))))
                          	 	 (org-agenda-span 'day)))
-                		(tags-todo "LEVEL=1"
+                		(tags-todo "LEVEL=1+REFILE"
                            	 	 ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")))
                 		(tags-todo "DEADLINE=\"<+0d>\""
                            	 	 ((org-agenda-overriding-header "DUE TODAY")
@@ -649,7 +648,6 @@
 		(add-hook 'org-agenda-mode-hook 'my/agenda-score-goal)
 	)
 
-
 	;; 5-org-capture
 	(use-package org-capture
   	:ensure nil
@@ -663,10 +661,10 @@
 		(org-capture-templates
       		'(("t" "Todo" entry
          	 	 (file "~/Org/inbox.org")
-         	 	 "* TODO %?\n  %U\n%^{Score}p" :clock-in t :clock-resume t)
+         	 	 "* TODO %?  :REFILE:\n  %U\n%^{Score}p" :clock-in t :clock-resume t)
   	        ("n" "Note" entry
 						(file+headline "~/Org/capture.org" "Notes")
-         	 	 "* %?          :NOTE:\n  %U\n  %a\n  :CLOCK:\n  :END:")
+         	 	 "* %?  :NOTE:\n  %U\n  %a\n  :CLOCK:\n  :END:")
         		("c" "Capture current TODO mix in table" table-line (file+headline "~/Org/WeeklyReports.org" "Burndown")
          	 	 "%(my/org-count-tasks-by-status)")
         		("s" "Capture Weekly Score in table" table-line (file+headline "~/Org/WeeklyReports.org" "Scores")
@@ -738,7 +736,6 @@
         	org-habit
         	org-calc))
 
-	(setq org-habit-graph-column 50)
 	(setq org-global-properties
       	'(("STYLE_ALL"  . "habit")
         	("Effort_ALL" . "0:10 0:30 1:00 2:00 3:00 4:00")

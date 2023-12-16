@@ -415,6 +415,14 @@ Else, call `comment-or-uncomment-region' on the current line."
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
 
+
+;; quelpa
+(use-package quelpa)
+(use-package quelpa-use-package :ensure t)
+
+;; Handle the `use-package-always-ensure' setting
+(quelpa-use-package-activate-advice)
+
 ;; Try out emacs package without installing
 (use-package try
   :ensure t
@@ -436,5 +444,12 @@ Else, call `comment-or-uncomment-region' on the current line."
 (set-file-name-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
 (setq locale-coding-system 'utf-8)
+
+;; Auto-indent when pasting
+(dolist (command '(yank yank-pop))
+  (eval `(defadvice ,command (after indent-region activate)
+           (and (not current-prefix-arg)
+                (let ((mark-even-if-inactive transient-mark-mode))
+                  (indent-region (region-beginning) (region-end) nil))))))
 
 (provide 'init-base)

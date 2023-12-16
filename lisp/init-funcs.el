@@ -211,6 +211,32 @@ one, an error is signaled."
 		(kill-buffer b))))
 
 
+;; Auto-display agenda
+(defun my/jump-to-org-agenda ()
+  "Create and jump to the my org agenda."
+  (interactive)
+  (let ((buf (get-buffer "*Org Agenda*"))
+        wind)
+    (if buf
+        (if (setq wind (get-buffer-window buf))
+            (select-window wind)
+          (if (called-interactively-p)
+              (progn
+                (select-window (display-buffer buf t t))
+                (org-fit-window-to-buffer))
+            (with-selected-window (display-buffer buf)
+              (org-fit-window-to-buffer))))
+      (my/org-agenda-with-tip nil))))
+
+(defun my/idle-agenda (&optional arg)
+  "Set or cancel idle agenda timer based on [ARG]."
+  (interactive "P")
+  (setq my/iagenda
+        (if arg
+            (cancel-timer my/iagenda)
+          (run-with-idle-timer 3600 t 'my/jump-to-org-agenda))))
+
+
 ;;Weekly Score Goal in Org-Agenda
 (defvar my/weekly-score-goal 42) ;; Define my goal to hit
 ;; Add up all the scores from DONE items in the agenda files

@@ -48,4 +48,11 @@ name and search again. Typically OP is nil or \"common\"."
                             (view-mode +1)
                             (pop-to-buffer buf)))))))))
 
+;; Org-column resizing
+(defun my/org-overlay-font-override (orig-fn beg end &optional txt face)
+  (let ((bnbface (cons '(:height 0.8) face)))
+    (funcall orig-fn beg end txt bnbface)))
+
+(advice-add 'org-columns--new-overlay :around #'my/org-overlay-font-override)
+
 (provide 'init-utils)

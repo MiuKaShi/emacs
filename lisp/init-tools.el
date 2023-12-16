@@ -135,6 +135,7 @@
   :ensure t
   :hook (after-init . rg-enable-default-bindings))
 
+
 ;; Jump to arbitrary positions
 (use-package avy
   :ensure t

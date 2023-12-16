@@ -79,6 +79,8 @@
   (consult-async-input-throttle 0.2)
   (consult-async-input-debounce 0.1))
 
+	(setq history-delete-duplicates t)
+
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
   :ensure t

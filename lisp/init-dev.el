@@ -45,12 +45,13 @@
   :custom
   (spdx-ignore-deprecated t))
 
-;; Show trailing whitespaces
+;; trailing whitespaces
 (use-package whitespace
   :ensure nil
-  :hook ((prog-mode markdown-mode conf-mode) . whitespace-mode)
-  :custom
-  (whitespace-style '(face trailing)))
+  :config
+  (setq whitespace-line-column nil)
+  :hook (before-save . whitespace-cleanup)
+  :delight whitespace-mode)
 
 ;; Quickrun codes, including cpp. awesome!
 (use-package quickrun

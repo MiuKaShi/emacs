@@ -5,6 +5,10 @@
 
 ;;; Code:
 
+(use-package delight
+  :ensure t
+)
+
 (use-package doom-themes
   :ensure t
   :config
