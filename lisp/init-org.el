@@ -56,6 +56,7 @@
 (use-package org-superstar
   :ensure t
   :config
+	(setq org-agenda-files (file-expand-wildcards "~/Org/*.org"))
   (setq org-superstar-leading-bullet " ")
   (setq org-superstar-special-todo-items t) ;; Makes TODO header bullets into boxes
   (setq org-superstar-todo-bullet-alist '(("TODO" . 9744)
@@ -72,26 +73,13 @@
 (setq org-insert-heading-respect-content t)
 (setq org-adapt-indentation t)
 
-(use-package org-modern
-	:ensure t
-	:hook (org-mode . org-modern-mode)
-	:config
- 	(setq org-modern-label-border 1)
- 	;; 标题行型号字符
- 	(setq org-modern-star ["◉" "✸" "○" "✿" "◈" "◊" "⧫" "◇" "✜"])
- 	;; 列表符号美化
- 	(setq org-modern-list
-       	'((?- . "•")
-         	(?+ . "◦")
-         	(?* . "▹")))
- 	(setq org-modern-tag nil)
- 	(setq org-modern-priority nil)
- 	(setq org-modern-todo nil)
- 	(setq org-modern-progress nil)
- 	; (setq org-modern-timestamp nil)
- 	(setq org-modern-table nil)
-  (add-hook 'org-mode-hook #'valign-mode) ; valign 解决 org-modern 下org-mode 表格不对齐的问题
-)
+(use-package org-bullets
+  :ensure t
+  :custom
+  (org-bullets-bullet-list '("◉" "✸" "○" "✿" "✤" "✜" "◆" "▶"))
+  (org-ellipsis " ▼") ;; 设置标题行折叠符号
+  ;; ⤵ ▼ ⬎  
+  :hook (org-mode . org-bullets-mode))
 
 
 (use-package evil-org
@@ -135,8 +123,6 @@
 	:ensure t
 	:defer 5
 )
-
-(setq org-modules '(org-habit))
 
 (eval-after-load 'org
   '(org-load-modules-maybe t))
@@ -224,8 +210,6 @@
   (org-block-begin-line ((t (:underline t :background unspecified))))
   (org-block-end-line ((t (:overline t :underline nil :background unspecified))))
   :config
-  (setq org-ellipsis " ▼") ;; 设置标题行折叠符号
-  ;; ⤵ ▼ ⬎  
   (setq org-highlight-latex-and-related '(native)) ;; 高亮inline latex语法
   ; (setq org-startup-folded 'showeverything)
   ;; 标题行美化
@@ -245,6 +229,7 @@
   ;; Opens links to other org file in same frame (rather than splitting)
   (setq org-link-frame-setup '((file . find-file)))
 
+  ;; 当状态从DONE改成其他状态时，移除 CLOSED: [timestamp]
   (setq org-closed-keep-when-no-todo t)
 
 	(setq org-log-done (quote note)
@@ -296,9 +281,9 @@
 
   ;; TODO关键词的样式设置
   (setq org-todo-keyword-faces '(
-							("TODO"       :inherit (region org-todo) :foreground "#50a14f" :weight bold)
-							("WAITING"    :inherit (region org-todo) :foreground "#feb24c" :weight bold)
-							("INPROG"			:inherit (org-todo region) :foreground "#0098dd" :weight bold)
+							("TODO"       :foreground "#50a14f" :weight bold)
+							("WAITING"    :foreground "#feb24c" :weight bold)
+							("INPROG"			:foreground "#0098dd" :weight bold)
 							("DONE"       :foreground "#7c7c75" :weight bold)
 							("SOMEDAY"		:foreground "#ff6480" :weight bold)
 							("CANCELLED"  :foreground "red" :weight bold)))
@@ -733,7 +718,6 @@
       	'(org-bbdb
         	org-bibtex
         	org-info
-        	org-habit
         	org-calc))
 
 	(setq org-global-properties
