@@ -195,7 +195,7 @@ one, an error is signaled."
   (push '("#+RESULTS:" . ?≚ ) prettify-symbols-alist)
 
   ;; drawers
-  (push '(":PROPERTIES:" . ?) prettify-symbols-alist)
+  ; (push '(":PROPERTIES:" . ?) prettify-symbols-alist)
 
   ;; tags
   ;; (push '(":Misc:" . "" ) prettify-symbols-alist)

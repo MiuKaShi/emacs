@@ -11,6 +11,13 @@
 ;; src block
 (require 'org-tempo)
 
+
+;; org-contrib
+(use-package org-contrib
+  :ensure t
+)
+(require 'org-checklist)
+
 ; Disable Electric Indent
 (electric-indent-mode -1)
 (setq org-edit-src-content-indentation 0)
@@ -655,7 +662,10 @@
         		("s" "Capture Weekly Score in table" table-line (file+headline "~/Org/WeeklyReports.org" "Scores")
          	 	 "%(my/add-weekly-score-table-entry)")
         		("e" "Capture Weekly time in table" table-line (file+headline "~/Org/WeeklyReports.org" "Minutes")
-         	 	 "%(my/org-time-logged-table-entry)")))
+         	 	 "%(my/org-time-logged-table-entry)")
+            ("w" "Web Collections" entry
+            (file+headline "~/Org/inbox.org" "Web")
+           	"* %^{url}\n%u\n")))
 	)
 
 
