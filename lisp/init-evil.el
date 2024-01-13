@@ -113,7 +113,8 @@ if LOCALLEADER is nil, otherwise \"<localleader>\"."
 
     (define-leader-key 'normal 'global nil
       ;; SPC, quit minibuffer.
-      "SPC" 'keyboard-escape-quit
+      ; "SPC" 'keyboard-escape-quit
+      "SPC" 'toggle-input-method
 
       ;; Clear highlights
       "S-SPC" 'lazy-highlight-cleanup

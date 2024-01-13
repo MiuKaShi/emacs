@@ -154,7 +154,7 @@
 ;; Explicitly define a width to reduce the cost of on-the-fly computation
 (setq-default display-line-numbers-width 3)
 
-;; Font size
+;; English Font setting
 (set-face-attribute 'default nil
   :font "MonoLisa Nerd Font"
   :height 180
@@ -167,19 +167,29 @@
   :font "MonoLisa Nerd Font"
   :height 180
   :weight 'medium)
+
+;; Chinese Font
+; (dolist (charset '(kana han symbol cjk-misc bopomofo))
+;   (set-fontset-font (frame-parameter nil 'font)
+;                     charset (font-spec :family "WenQuanYi Zen Hei Mono"
+;                                        :size 26)))
+
+; transparency
+(set-frame-parameter nil 'alpha-background 85)
+(add-to-list 'default-frame-alist '(alpha-background . 85))
+
 ;; Makes commented text italics.
 (set-face-attribute 'font-lock-comment-face nil
   :slant 'italic)
 ;; Makes keywords italics.
 (set-face-attribute 'font-lock-keyword-face nil
   :slant 'italic)
+
+
 ;; Uncomment the following line if line spacing needs adjusting.
 (setq-default line-spacing 0.12)
 
-(set-frame-parameter nil 'alpha-background 85)
-(add-to-list 'default-frame-alist '(alpha-background . 85))
-
-; transparency
+; enhanced transparency
 (set-face-attribute 'highlight nil :foreground 'unspecified)
 (if window-system (progn
   (set-background-color "Black")

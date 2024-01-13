@@ -90,9 +90,6 @@
 (with-eval-after-load 'help-fns
   (put 'help-fns-edit-variable 'disabled nil))
 
-;; Use TeX as default IM
-(setq default-input-method "TeX")
-
 ;; Highlight parenthesises
 (use-package paren
   :ensure nil
@@ -429,13 +426,9 @@ Else, call `comment-or-uncomment-region' on the current line."
   :commands try try-and-refresh)
 
 
-;; ENCODING -------------
+;; Language/Encoding -------------
 (set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8)
-(setenv "LANG" "en_US.UTF-8")
-(setenv "LC_ALL" "en_US.UTF-8")
-(setenv "LC_CTYPE" "en_US.UTF-8")
-(set-charset-priority 'unicode)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
@@ -443,6 +436,10 @@ Else, call `comment-or-uncomment-region' on the current line."
 (set-clipboard-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
+(set-charset-priority 'unicode)
+(setenv "LANG" "en_US.UTF-8")
+(setenv "LC_ALL" "en_US.UTF-8")
+(setenv "LC_CTYPE" "en_US.UTF-8")
 (setq locale-coding-system 'utf-8)
 
 ;; Auto-indent when pasting

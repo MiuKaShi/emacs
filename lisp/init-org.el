@@ -735,6 +735,7 @@
         	("Effort_ALL" . "0:10 0:30 1:00 2:00 3:00 4:00")
         	("Score_ALL"  . "1 2 3 5 8")))
 
+
 ) ;; This parenthesis ends the org use-package.
 
 
