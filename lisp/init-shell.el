@@ -146,5 +146,4 @@ If popup is focused, kill it."
   (shell-kill-buffer-on-exit t)
   (shell-get-old-input-include-continuation-lines t))
 
-
 (provide 'init-shell)
