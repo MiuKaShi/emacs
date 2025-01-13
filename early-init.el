@@ -12,6 +12,14 @@
 ;; 禁止自动缩放窗口先
 (setq frame-inhibit-implied-resize t)
 
+;; skip the mtime checks on every *.elc file.
+(setq load-prefer-newer 'noninteractive)
+
+;; Define the level of native compilation optimization.
+(setq native-comp-speed 3)
+(setq native-comp-async-jobs-number 0)
+(setq native-comp-jit-compilation t)
+
 ;; Compile warnings
 (setq native-comp-async-report-warnings-errors 'silent) ;; native-comp warning
 (setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
