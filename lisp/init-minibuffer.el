@@ -83,6 +83,7 @@
 
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
+	:after (embark consult)
   :ensure t
   :defer t)
 
