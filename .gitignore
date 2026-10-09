@@ -7,6 +7,7 @@
 # Backup files
 *.txt
 
+eln-cache/
 elpa/
 etc/
 transient/

@@ -1,4 +1,4 @@
-;;; init.el --- The main entry for emacs -*- lexical-binding: t -*-
+;;; early-init.el --- The main entry for emacs -*- lexical-binding: t -*-
 
 ;;; Commentary:
 ;;

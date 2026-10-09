@@ -1,5 +1,6 @@
-;;; Increase how much is read from processes in a single chunk (default is 4kb).
+;;; init.el --- The main entry for emacs -*- lexical-binding: t -*-
 
+;;; Increase how much is read from processes in a single chunk (default is 4kb).
 ;;; Commentary:
 ;;
 
